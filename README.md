@@ -1,2 +1,2 @@
 # BlackJack
-Another CLI game with Ruby
+Another CLI game with Ruby.
