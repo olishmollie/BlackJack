@@ -13,21 +13,27 @@ class BlackJack
       "7\u2663", "8\u2663", "9\u2663", "10\u2663", "J\u2663",
       "Q\u2663", "K\u2663"
     ].shuffle!
+    
     @deck = deck
-    @hand = @deck.shift + " | " + @deck.shift
+    
+    @player_hand = @deck.shift + " | " + @deck.shift
   end
 
   def score
     score = 0
-    @hand.delete(" | ").each_char do |card|
+    @player_hand.scan(/\w+/).each do |card|
       if card.to_i == 0
         score += 11 if card == "A"
-        score += 10 if card == "K" || card == "Q" || card == "J" || card == "1"
+        score += 10 if card == "K" || card == "Q" || card == "J"
       else
         score += card.to_i
       end
     end
-    score
+    if score > 21 && @player_hand.include?("A")
+      return score - (10 * @player_hand.count("A"))
+    else
+      return score
+    end
   end
 
   def input
@@ -55,12 +61,12 @@ class BlackJack
   end
 
   def deal
-    @hand << " | " + @deck.shift
+    @player_hand << " | " + @deck.shift
   end
 
   def turn
     score
-    puts @hand + "     [#{score}]"
+    puts @player_hand + "     [#{score}]"
     puts "Hit?(Y/n)"
     input
     if hit?
@@ -78,7 +84,7 @@ class BlackJack
     until over?
       turn
     end
-    puts @hand
+    puts @player_hand
     puts "You busted with a score of #{score}!" if bust?
     puts "Stay. Your score is #{score}." if stay?
   end
