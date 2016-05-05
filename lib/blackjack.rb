@@ -1,5 +1,7 @@
 class BlackJack
   def initialize
+    @player_hand = ""
+    @dealer_hand = ""
     deck = [
       "A\u2660", "2\u2660", "3\u2660", "4\u2660", "5\u2660",
       "6\u2660", "7\u2660", "8\u2660", "9\u2660", "10\u2660",
@@ -12,16 +14,30 @@ class BlackJack
       "2\u2663", "3\u2663", "4\u2663", "5\u2663", "6\u2663",
       "7\u2663", "8\u2663", "9\u2663", "10\u2663", "J\u2663",
       "Q\u2663", "K\u2663"
-    ].shuffle!
+    ]
+
+    100.times {deck.shuffle!}
     
     @deck = deck
     
-    @player_hand = @deck.shift + " | " + @deck.shift
+    @player_hand << @deck.shift
+    @dealer_hand << @deck.shift
+    @player_hand << " | " + @deck.shift
+    @dealer_hand << " | " + @deck.shift
   end
 
-  def score
+  def show_hands(turn)
+    linewidth = 50
+    if turn == 1
+      puts @player_hand.ljust(linewidth/2) + ("Dealer's hand: " + "? | " + @dealer_hand.split(" | ")[1]).rjust(linewidth/2)
+    else
+      puts @player_hand.ljust(linewidth/2) + ("Dealer's hand: " + @dealer_hand).rjust(linewidth/2)
+    end
+  end
+
+  def score(hand)
     score = 0
-    @player_hand.scan(/\w+/).each do |card|
+    hand.scan(/\w+/).each do |card|
       if card.to_i == 0
         score += 11 if card == "A"
         score += 10 if card == "K" || card == "Q" || card == "J"
@@ -29,8 +45,8 @@ class BlackJack
         score += card.to_i
       end
     end
-    if score > 21 && @player_hand.include?("A")
-      return score - (10 * @player_hand.count("A"))
+    if score > 21 && hand.include?("A")
+      return score - (10 * hand.count("A"))
     else
       return score
     end
@@ -45,7 +61,7 @@ class BlackJack
   end
 
   def bust?
-    score > 21
+    score(@player_hand) > 21
   end
 
   def stay?
@@ -60,22 +76,35 @@ class BlackJack
     bust? || stay?
   end
 
-  def deal
-    @player_hand << " | " + @deck.shift
+  def deal(hand)
+    hand << " | " + @deck.shift
   end
 
   def turn
-    score
-    puts @player_hand + "     [#{score}]"
+    score(@player_hand)
+    show_hands(1)
     puts "Hit?(Y/n)"
     input
     if hit?
-      deal
+      deal(@player_hand)
     elsif stay?
       nil
     else
       puts "Invalid input."
       turn
+    end
+  end
+
+  def dealer_turn
+    score(@dealer_hand)
+    show_hands(2)
+    if score(@dealer_hand) < 17
+      deal(@dealer_hand)
+      dealer_turn
+    elsif score(@dealer_hand) > 21
+      puts "Dealer busts!"
+    else
+      nil
     end
   end
 
@@ -85,7 +114,31 @@ class BlackJack
       turn
     end
     puts @player_hand
-    puts "You busted with a score of #{score}!" if bust?
-    puts "Stay. Your score is #{score}." if stay?
+    puts "You busted with a score of #{score(@player_hand)}!" if bust?
+    if stay?
+      puts "You stay at #{score(@player_hand)}."
+      dealer_turn
+      if score(@dealer_hand) > 21
+        puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      elsif score(@player_hand) > score(@dealer_hand)
+        puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      elsif score(@player_hand) == score(@dealer_hand)
+        puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      else
+        puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      end
+    end
   end
 end
+
+
+
+
+
+
+
+
+
+
+
+
