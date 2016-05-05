@@ -26,6 +26,10 @@ class BlackJack
     @dealer_hand << " | " + @deck.shift
   end
 
+  def natural?(hand)
+    score(hand) == 21
+  end
+
   def show_hands(turn)
     linewidth = 50
     if turn == 1
@@ -81,8 +85,6 @@ class BlackJack
   end
 
   def turn
-    score(@player_hand)
-    show_hands(1)
     puts "Hit?(Y/n)"
     input
     if hit?
@@ -110,22 +112,33 @@ class BlackJack
 
   def play
     puts "Welcome to BlackJack!"
-    until over?
-      turn
-    end
-    puts @player_hand
-    puts "You busted with a score of #{score(@player_hand)}!" if bust?
-    if stay?
-      puts "You stay at #{score(@player_hand)}."
-      dealer_turn
-      if score(@dealer_hand) > 21
-        puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-      elsif score(@player_hand) > score(@dealer_hand)
-        puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-      elsif score(@player_hand) == score(@dealer_hand)
-        puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-      else
-        puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    show_hands(1)
+    if natural?(@dealer_hand) && !natural?(@player_hand)
+      puts "You lose! Dealer has BlackJack."
+      show_hands(2)
+    elsif natural?(@player_hand) && !natural?(@dealer_hand)
+      puts "BlackJack -- you win!"
+    elsif natural?(@player_hand) && natural?(@dealer_hand)
+      puts "You push! You and the dealer both have BlackJack."
+      show_hands(2)
+    else
+      until over?
+        turn
+        show_hands(1)
+      end
+      puts "You busted with a score of #{score(@player_hand)}!" if bust?
+      if stay?
+        puts "You stay at #{score(@player_hand)}."
+        dealer_turn
+        if score(@dealer_hand) > 21
+          puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+        elsif score(@player_hand) > score(@dealer_hand)
+          puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+        elsif score(@player_hand) == score(@dealer_hand)
+          puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+        else
+          puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+        end
       end
     end
   end
