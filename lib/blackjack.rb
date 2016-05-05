@@ -53,8 +53,10 @@ class BlackJack
         score += card.to_i
       end
     end
-    if score > 21 && hand.include?("A")
-      return score - (10 * hand.count("A"))
+    if score > 21 && hand.count("A") == 1
+      return score - 10
+    elsif score > 21 && hand.count("A") == 2
+      return score - 9
     else
       return score
     end
