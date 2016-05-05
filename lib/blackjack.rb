@@ -1,7 +1,8 @@
 class BlackJack
   def initialize
-    @player_hand = ""
-    @dealer_hand = ""
+    @player_hand = []
+    @dealer_hand = []
+    
     deck = [
       "A\u2660", "2\u2660", "3\u2660", "4\u2660", "5\u2660",
       "6\u2660", "7\u2660", "8\u2660", "9\u2660", "10\u2660",
@@ -22,8 +23,11 @@ class BlackJack
     
     @player_hand << @deck.shift
     @dealer_hand << @deck.shift
-    @player_hand << " | " + @deck.shift
-    @dealer_hand << " | " + @deck.shift
+    @player_hand << @deck.shift
+    @dealer_hand << @deck.shift
+
+    @player_score = 0
+    @dealer_score = 0 
   end
 
   def natural?(hand)
@@ -33,18 +37,18 @@ class BlackJack
   def show_hands(turn)
     linewidth = 50
     if turn == 1
-      puts @player_hand.ljust(linewidth/2) + ("Dealer's hand: " + "? | " + @dealer_hand.split(" | ")[1]).rjust(linewidth/2)
+      puts "#{@player_hand}".ljust(linewidth/2) + ("Dealer has: [#{@dealer_hand[0]}, \"??\"]").rjust(linewidth/2)
     else
-      puts @player_hand.ljust(linewidth/2) + ("Dealer's hand: " + @dealer_hand).rjust(linewidth/2)
+      puts "#{@player_hand}".ljust(linewidth/2) + "Dealer has: #{@dealer_hand}".rjust(linewidth/2)
     end
   end
 
   def score(hand)
     score = 0
-    hand.scan(/\w+/).each do |card|
+    hand.each do |card|
       if card.to_i == 0
-        score += 11 if card == "A"
-        score += 10 if card == "K" || card == "Q" || card == "J"
+        score += 11 if card.include?("A")
+        score += 10 if card.include?("K") || card.include?("Q") || card.include?("J")
       else
         score += card.to_i
       end
@@ -81,10 +85,11 @@ class BlackJack
   end
 
   def deal(hand)
-    hand << " | " + @deck.shift
+    hand << @deck.shift
   end
 
   def turn
+    show_hands(1)
     puts "Hit?(Y/n)"
     input
     if hit?
@@ -112,22 +117,23 @@ class BlackJack
 
   def play
     puts "Welcome to BlackJack!"
-    show_hands(1)
     if natural?(@dealer_hand) && !natural?(@player_hand)
       puts "You lose! Dealer has BlackJack."
       show_hands(2)
     elsif natural?(@player_hand) && !natural?(@dealer_hand)
       puts "BlackJack -- you win!"
+      show_hands(2)
     elsif natural?(@player_hand) && natural?(@dealer_hand)
       puts "You push! You and the dealer both have BlackJack."
       show_hands(2)
     else
       until over?
         turn
-        show_hands(1)
       end
-      puts "You busted with a score of #{score(@player_hand)}!" if bust?
-      if stay?
+      if bust?
+        show_hands(1)
+        puts "You busted with a score of #{score(@player_hand)}!"
+      elsif stay?
         puts "You stay at #{score(@player_hand)}."
         dealer_turn
         if score(@dealer_hand) > 21
