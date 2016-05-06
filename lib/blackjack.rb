@@ -25,9 +25,30 @@ class BlackJack
     @dealer_hand << @deck.shift
     @player_hand << @deck.shift
     @dealer_hand << @deck.shift
+  end
 
-    @player_score = 0
-    @dealer_score = 0 
+  def score(hand)
+    score = 0
+    hand = hand.to_s.scan(/\w+/)
+    hand.each do |card|
+      if card.to_i > 0
+        score += card.to_i
+      elsif card.to_i == 0
+        if card == "A"
+          score += 11
+        else
+          score += 10
+        end
+      end
+    end
+    if score > 21 && hand.include?("A")
+      if score - 10 <= 21
+        score -= 10
+      elsif score - 10 > 21
+        score -= (10 * hand.count("A"))
+      end
+    end
+    score
   end
 
   def natural?(hand)
@@ -40,25 +61,6 @@ class BlackJack
       puts "#{@player_hand}".ljust(linewidth/2) + ("Dealer has: [#{@dealer_hand[0]}, \"??\"]").rjust(linewidth/2)
     else
       puts "#{@player_hand}".ljust(linewidth/2) + "Dealer has: #{@dealer_hand}".rjust(linewidth/2)
-    end
-  end
-
-  def score(hand)
-    score = 0
-    hand.each do |card|
-      if card.to_i == 0
-        score += 11 if card.include?("A")
-        score += 10 if card.include?("K") || card.include?("Q") || card.include?("J")
-      else
-        score += card.to_i
-      end
-    end
-    if score > 21 && hand.count("A") == 1
-      return score - 10
-    elsif score > 21 && hand.count("A") == 2
-      return score - 9
-    else
-      return score
     end
   end
 
@@ -78,12 +80,16 @@ class BlackJack
     @input == "n"
   end
 
+  def blackjack?
+    score(@player_hand) == 21
+  end
+
   def invalid_input?
     @input != "y" || @input != "n" || @input != ""
   end
 
   def over?
-    bust? || stay?
+    bust? || stay? || blackjack?
   end
 
   def deal(hand)
@@ -112,8 +118,22 @@ class BlackJack
       dealer_turn
     elsif score(@dealer_hand) > 21
       puts "Dealer busts!"
+    elsif score(@dealer_hand) == 21
+      puts "BlackJack!!!"
     else
       nil
+    end
+  end
+
+  def endgame
+    if score(@dealer_hand) > 21
+      puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    elsif score(@player_hand) > score(@dealer_hand)
+      puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    elsif score(@player_hand) == score(@dealer_hand)
+      puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    else
+      puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     end
   end
 
@@ -132,21 +152,18 @@ class BlackJack
       until over?
         turn
       end
-      if bust?
+      if blackjack?
+        show_hands(1)
+        puts "BlackJack!!!"
+        dealer_turn
+        endgame
+      elsif bust?
         show_hands(1)
         puts "You busted with a score of #{score(@player_hand)}!"
       elsif stay?
         puts "You stay at #{score(@player_hand)}."
         dealer_turn
-        if score(@dealer_hand) > 21
-          puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-        elsif score(@player_hand) > score(@dealer_hand)
-          puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-        elsif score(@player_hand) == score(@dealer_hand)
-          puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-        else
-          puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-        end
+        endgame
       end
     end
   end
