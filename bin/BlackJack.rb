@@ -10,7 +10,7 @@ def play
 end
 
 def play_again
-  puts "Play again?(Y/n)"
+  puts "Play again?(Y/n)".rjust(LINEWIDTH/2 + 8)
   input = gets
   if input == "Y\n" || input == "\n" || input == "y\n"
     play
@@ -23,7 +23,7 @@ def play_again
   end
 end
 
-
+system("clear")
 puts "".ljust(LINEWIDTH,"=") 
 puts "Welcome to BlackJack!!".rjust(LINEWIDTH/2 + 11)
 puts "".ljust(LINEWIDTH," ")
