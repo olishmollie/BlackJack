@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 require_relative '../lib/blackjack.rb'
 
-def game
-  @game = BlackJack.new
-  @game.play
+LINEWIDTH = 92
+def play
+  print "Your hand:".ljust(LINEWIDTH/2) + "Dealer hand:".rjust(LINEWIDTH/2)
+  game = BlackJack.new
+  game.play
   play_again
 end
 
@@ -11,14 +13,19 @@ def play_again
   puts "Play again?(Y/n)"
   input = gets
   if input == "Y\n" || input == "\n" || input == "y\n"
-    game
+    play
   elsif input == "n\n" || input == "N\n"
-    puts "Bye"
+    puts "Bye".rjust(LINEWIDTH/2 + 1)
+    puts "".ljust(LINEWIDTH,"=")
   else
     puts "Invaild input."
     play_again
   end
 end
 
-game
+
+puts "".ljust(LINEWIDTH,"=") 
+puts "Welcome to BlackJack!!".rjust(LINEWIDTH/2 + 11)
+puts "".ljust(LINEWIDTH," ")
+play
 

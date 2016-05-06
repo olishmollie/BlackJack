@@ -1,5 +1,6 @@
 class BlackJack
   def initialize
+    @linewidth = 92
     @player_hand = []
     @dealer_hand = []
     
@@ -56,11 +57,11 @@ class BlackJack
   end
 
   def show_hands(turn)
-    linewidth = 50
+    linewidth = 92
     if turn == 1
-      puts "#{@player_hand}".ljust(linewidth/2) + ("Dealer has: [#{@dealer_hand[0]}, \"??\"]").rjust(linewidth/2)
+      puts "#{@player_hand}".ljust(linewidth/2) + ("[#{@dealer_hand[0]}, \"??\"]").rjust(linewidth/2)
     else
-      puts "#{@player_hand}".ljust(linewidth/2) + "Dealer has: #{@dealer_hand}".rjust(linewidth/2)
+      puts "#{@player_hand}".ljust(linewidth/2) + "#{@dealer_hand}".rjust(linewidth/2)
     end
   end
 
@@ -98,7 +99,7 @@ class BlackJack
 
   def turn
     show_hands(1)
-    puts "Hit?(Y/n)"
+    puts "Hit?(Y/n)".rjust(@linewidth/2 + 4)
     input
     if hit?
       deal(@player_hand)
@@ -138,16 +139,15 @@ class BlackJack
   end
 
   def play
-    puts "Welcome to BlackJack!"
     if natural?(@dealer_hand) && !natural?(@player_hand)
+      show_hands(2)
       puts "You lose! Dealer has BlackJack."
-      show_hands(2)
     elsif natural?(@player_hand) && !natural?(@dealer_hand)
+      show_hands(2)
       puts "BlackJack -- you win!"
-      show_hands(2)
     elsif natural?(@player_hand) && natural?(@dealer_hand)
-      puts "You push! You and the dealer both have BlackJack."
       show_hands(2)
+      puts "You push! You and the dealer both have BlackJack."
     else
       until over?
         turn
@@ -168,15 +168,3 @@ class BlackJack
     end
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
