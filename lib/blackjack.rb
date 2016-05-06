@@ -1,6 +1,6 @@
 class BlackJack
   def initialize
-    @linewidth = 92
+    @linewidth = 91
     @player_hand = []
     @dealer_hand = []
     

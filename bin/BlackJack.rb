@@ -23,6 +23,7 @@ def play_again
   end
 end
 
+system('printf "\e[8;30;92;t"')
 system("clear")
 puts "".ljust(LINEWIDTH,"=") 
 puts "Welcome to BlackJack!!".rjust(LINEWIDTH/2 + 11)
