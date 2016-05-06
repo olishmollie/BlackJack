@@ -1,6 +1,6 @@
 class BlackJack
   def initialize
-    @linewidth = 91
+    @linewidth = 90
     @player_hand = []
     @dealer_hand = []
     
@@ -122,15 +122,18 @@ class BlackJack
     sleep(1)
     if score(@dealer_hand) < 17
       sleep(1)
-      puts "Dealer adds a card.".rjust(@linewidth/2 + 9)
+      puts "Dealer hits.".rjust(@linewidth/2 + 6)
       deal(@dealer_hand)
       dealer_turn
     elsif score(@dealer_hand) > 21
       puts "Dealer busts!".rjust(@linewidth/2 + 7)
+      sleep(1)
     elsif score(@dealer_hand) == 21
       puts "BlackJack!!!".rjust(@linewidth/2 + 6)
+      sleep(1)
     else
       puts "Dealer stays.".rjust(@linewidth/2 + 6)
+      sleep(1)
     end
   end
 
@@ -166,10 +169,11 @@ class BlackJack
       end
       if blackjack?
         show_hands(1)
-        puts "BlackJack!!! Dealer has #{score(@dealer_hand)}".rjust(@linewidth/2 + 14)
+        puts "BlackJack!!! Dealer has #{score(@dealer_hand)}.".rjust(@linewidth/2 + 14)
         dealer_turn
         endgame
       elsif bust?
+        sleep(1)
         puts "You busted with #{score(@player_hand)}!".rjust(@linewidth/2 + 9)
       elsif stay?
         puts "You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.".rjust(@linewidth/2 + 15)
