@@ -18,7 +18,9 @@ class BlackJack
       "Q\u2663", "K\u2663"
     ]
 
-    100.times {deck.shuffle!}
+    100.times do 
+      deck.shuffle!
+    end
     
     @deck = deck
     
@@ -60,8 +62,12 @@ class BlackJack
     linewidth = 92
     if turn == 1
       puts "#{@player_hand}".ljust(linewidth/2) + ("[#{@dealer_hand[0]}, \"??\"]").rjust(linewidth/2)
-    else
+    elsif turn == 2
       puts "#{@player_hand}".ljust(linewidth/2) + "#{@dealer_hand}".rjust(linewidth/2)
+    elsif turn == 3
+      puts "#{@player_hand}".ljust(linewidth/2)
+    elsif turn == 4
+      puts "#{@dealer_hand}".rjust(linewidth)
     end
   end
 
@@ -98,70 +104,75 @@ class BlackJack
   end
 
   def turn
-    show_hands(1)
     puts "Hit?(Y/n)".rjust(@linewidth/2 + 4)
     input
     if hit?
       deal(@player_hand)
+      show_hands(3)
     elsif stay?
       nil
     else
-      puts "Invalid input."
+      puts "Invalid input.".rjust(@linewidth/2 + 7)
       turn
     end
   end
 
   def dealer_turn
-    score(@dealer_hand)
-    show_hands(2)
+    show_hands(4)
+    sleep(1)
     if score(@dealer_hand) < 17
+      sleep(1)
+      puts "Dealer adds a card.".rjust(@linewidth/2 + 9)
       deal(@dealer_hand)
       dealer_turn
     elsif score(@dealer_hand) > 21
-      puts "Dealer busts!"
+      puts "Dealer busts!".rjust(@linewidth/2 + 7)
     elsif score(@dealer_hand) == 21
-      puts "BlackJack!!!"
+      puts "BlackJack!!!".rjust(@linewidth/2 + 6)
     else
-      nil
+      puts "Dealer stays.".rjust(@linewidth/2 + 6)
     end
   end
 
   def endgame
+    win = "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    push = "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     if score(@dealer_hand) > 21
-      puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+       puts win.rjust(@linewidth/2 + (win.length/2))
     elsif score(@player_hand) > score(@dealer_hand)
-      puts "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      puts win.rjust(@linewidth/2 + (win.length/2))
     elsif score(@player_hand) == score(@dealer_hand)
-      puts "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      puts push.rjust(@linewidth/2 + (push.length/2))
     else
-      puts "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+      puts lose.rjust(@linewidth/2 + (lose.length/2))
     end
   end
 
   def play
     if natural?(@dealer_hand) && !natural?(@player_hand)
       show_hands(2)
-      puts "You lose! Dealer has BlackJack."
+      puts "You lose! Dealer has BlackJack.".rjust(@linewidth/2 + 15)
     elsif natural?(@player_hand) && !natural?(@dealer_hand)
       show_hands(2)
-      puts "BlackJack -- you win!"
+      puts "BlackJack -- you win!".rjust(@linewidth/2 + 10)
     elsif natural?(@player_hand) && natural?(@dealer_hand)
       show_hands(2)
-      puts "You push! You and the dealer both have BlackJack."
+      puts "You push! You and the dealer both have BlackJack.".rjust(@linewidth/2 + 25)
     else
+      show_hands(1)
       until over?
         turn
       end
       if blackjack?
         show_hands(1)
-        puts "BlackJack!!!"
+        puts "BlackJack!!! Dealer has #{score(@dealer_hand)}".rjust(@linewidth/2 + 14)
         dealer_turn
         endgame
       elsif bust?
-        show_hands(1)
-        puts "You busted with a score of #{score(@player_hand)}!"
+        puts "You busted with #{score(@player_hand)}!".rjust(@linewidth/2 + 9)
       elsif stay?
-        puts "You stay at #{score(@player_hand)}."
+        puts "You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.".rjust(@linewidth/2 + 15)
         dealer_turn
         endgame
       end
