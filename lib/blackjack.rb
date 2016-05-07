@@ -28,14 +28,6 @@ class BlackJack
       ["\u2517","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u251B"]
     ]
 
-    @y = 1
-    @linewidth = 88
-
-    @board = board
-
-    @player_hand = ""
-    @dealer_hand = ""
-    
     deck = [
       "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]",
       "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]",
@@ -48,112 +40,25 @@ class BlackJack
       "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]",
       "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]",
       "[Q\u2663]", "[K\u2663]"
-    ]
+      ]
 
-    100.times do 
-      deck.shuffle!
-    end
+    100.times {deck.shuffle!}
+
+    @y = 1
+    @linewidth = 88
+
+    @board = board
+
+    @player_hand = ""
+    @dealer_hand = ""
     
     @deck = deck
-    
-    @player_hand << @deck.shift
-    @dealer_hand << @deck.shift
-    @player_hand << @deck.shift
-    @dealer_hand << @deck.shift
+
+    @chips = 500
+    @wager = 0
   end
 
-  def line_break
-    @y += 1
-  end
-
-  def turn
-    center_print_str("Hit?(Y/n)")
-    input
-    if hit?
-      deal(@player_hand)
-      show_hands(3)
-    elsif stay?
-      nil
-    else
-      center_print_str("Invalid input.")
-      turn
-    end
-  end
-
-  def dealer_turn
-    sleep(1)
-    if score(@dealer_hand) < 17
-      center_print_str("Dealer hits.")
-      deal(@dealer_hand)
-      show_hands(4)
-      dealer_turn
-    elsif score(@dealer_hand) > 21
-      center_print_str("Dealer busts!")
-      line_break
-      endgame
-    else
-      center_print_str("Dealer stays at #{score(@dealer_hand)}.")
-      line_break
-      endgame
-    end
-  end
-
-  def play
-    center_print_str("WELCOME TO BLACKJACK!!!")
-    if natural?(@dealer_hand) && !natural?(@player_hand)
-      show_hands(2)
-      center_print_str("You lose! Dealer has BlackJack.")
-      line_break
-    elsif natural?(@player_hand) && !natural?(@dealer_hand)
-      show_hands(2)
-      center_print_str("BlackJack -- you win!")
-      line_break
-    elsif natural?(@player_hand) && natural?(@dealer_hand)
-      show_hands(2)
-      center_print_string("You push! You and the dealer both have BlackJack.")
-      line_break
-    else
-      show_hands(1)
-      until over?
-        turn
-      end
-      if blackjack?
-        line_break
-        center_print_str("BlackJack!!! Dealer has #{score(@dealer_hand)}.")
-        show_hands(2)
-        dealer_turn
-        endgame
-      elsif bust?
-        center_print_str("You busted with #{score(@player_hand)}!")
-        line_break
-        play_again?
-      else
-        line_break
-        center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
-        show_hands(4)
-        dealer_turn
-      end
-    end
-  end
-
-  def show_hands(turn)
-    if turn == 1
-      left_print_str(@player_hand)
-      right_print_str("#{@dealer_hand[0..3]}[??]")
-      @y += 1
-    elsif turn == 2
-      left_print_str(@player_hand)
-      right_print_str(@dealer_hand)
-      @y += 1
-    elsif turn == 3
-      left_print_str(@player_hand)
-      @y += 1
-    else
-      right_print_str(@dealer_hand)
-      @y += 1
-    end
-    display_board
-  end
+  #------------------- GAMEBOARD METHODS -------------------#
 
   def display_board
     system("clear")
@@ -162,6 +67,19 @@ class BlackJack
         print cell
       end
     end
+  end
+
+  def clear_board
+    index = 1
+    while index < 24
+      @board[index].fill(" ", 1..90)
+      index += 1
+    end
+  end
+
+  def delete_row(y)
+    @board[y].fill(" ", 1..90)
+    @y -= 1
   end
 
   def center_print_str(str)
@@ -196,6 +114,27 @@ class BlackJack
     end
   end
 
+  def show_hands(turn)
+    if turn == 1
+      left_print_str(@player_hand)
+      right_print_str("#{@dealer_hand[0..3]}[??]")
+      @y += 1
+    elsif turn == 2
+      left_print_str(@player_hand)
+      right_print_str(@dealer_hand)
+      @y += 1
+    elsif turn == 3
+      left_print_str(@player_hand)
+      @y += 1
+    else
+      right_print_str(@dealer_hand)
+      @y += 1
+    end
+    display_board
+  end
+
+  #------------------- SCORES AND BETTING -------------------#
+
   def score(hand)
     score = 0
     hand = hand.to_s.scan(/\w+/)
@@ -220,12 +159,31 @@ class BlackJack
     score
   end
 
-  def natural?(hand)
-    score(hand) == 21
+  def wager
+    center_print_str("You have #{@chips} chips. Wager?")
+    input = gets.strip.scan(/\d+/)[0].to_i
+    if input.to_i > 0 && input.to_i <= @chips
+      @wager += input.to_i
+      @chips -= input.to_i
+    elsif input.to_i > @chips
+      delete_row(3)
+      center_print_str("You don't have enough chips!")
+      sleep(1)
+      delete_row(3)
+      wager
+    else
+      delete_row(3)
+      center_print_str("Invalid input")
+      sleep(1)
+      delete_row(3)
+      wager
+    end
   end
 
-  def input
-    @input = gets.strip.downcase
+  #------------------- CONDITIONALS -------------------#
+
+  def natural?(hand)
+    score(hand) == 21
   end
 
   def hit?
@@ -244,49 +202,147 @@ class BlackJack
     score(@player_hand) == 21
   end
 
-  def invalid_input?
-    @input != "y" || @input != "n" || @input != ""
-  end
-
   def over?
     bust? || stay? || blackjack?
   end
 
+  def really_over?
+    @chips <= 0
+  end
+
+  #------------------- GAME PLAY -------------------#
+
+  def first_deal
+    @player_hand << @deck.shift
+    @dealer_hand << @deck.shift
+    @player_hand << @deck.shift
+    @dealer_hand << @deck.shift
+  end
+  
   def deal(hand)
     hand << @deck.shift
   end
 
+  def turn
+    center_print_str("Hit?(Y/n)")
+    input = gets.downcase.strip
+    if input == "y" || input == ""
+      deal(@player_hand)
+      show_hands(3)
+    elsif input == "n"
+      center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
+      show_hands(4)
+      dealer_turn
+    else
+      center_print_str("Invalid input.")
+      turn
+    end
+  end
+
+  def dealer_turn
+    sleep(1)
+    if score(@dealer_hand) < 17
+      center_print_str("Dealer hits.")
+      deal(@dealer_hand)
+      show_hands(4)
+      dealer_turn
+    elsif score(@dealer_hand) > 21
+      center_print_str("Dealer busted!")
+      endgame
+    else
+      center_print_str("Dealer stays at #{score(@dealer_hand)}.")
+      endgame
+    end
+  end
+
+  def play
+    first_deal
+    center_print_str("Welcome to BlackJack!!!")
+    center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b")
+    wager
+    delete_row(3)
+    center_print_str("Chips: #{@chips}  Wager: #{@wager}")
+    if natural?(@dealer_hand) && !natural?(@player_hand)
+      show_hands(2)
+      center_print_str("You lose! Dealer has BlackJack.")
+      play_again
+    elsif natural?(@player_hand) && !natural?(@dealer_hand)
+      show_hands(2)
+      center_print_str("BlackJack -- you win #{@wager / 2} chips!")
+      @chips += @wager + (@wager / 2)
+      play_again
+    elsif natural?(@player_hand) && natural?(@dealer_hand)
+      show_hands(2)
+      center_print_string("You push! You and the dealer both have BlackJack.")
+      @chips += @wager
+      play_again
+    else
+      show_hands(1)
+      until over?
+        turn
+      end
+      if blackjack?
+        center_print_str("BlackJack!!! Dealer has #{score(@dealer_hand)}.")
+        show_hands(2)
+        dealer_turn
+        endgame
+      elsif bust?
+        center_print_str("You busted with #{score(@player_hand)}!")
+        play_again
+      end
+    end
+  end
+
   def endgame
-    win = "You win! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    win = "You win #{@wager} chips! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     push = "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     sleep(1)
     if score(@dealer_hand) > 21
       center_print_str(win)
+      @chips += (@wager * 2)
     elsif score(@player_hand) > score(@dealer_hand)
       center_print_str(win)
+      @chips += (@wager * 2)
     elsif score(@player_hand) == score(@dealer_hand)
       center_print_str(push)
+      @chips += @wager
     else
       center_print_str(lose)
     end
-    line_break
-    play_again?
+    play_again
   end
 
-  def play_again?
+  def play_again
+    if really_over?
+      center_print_str("You're out of chips. Thanks for playing!")
+      sleep(2)
+      system("clear")
+      return nil
+    end
     center_print_str("Play again?(Y/n)")
     input = gets.downcase.strip
     if input == "y" || input == ""
-      BlackJack.new.play
+      @player_hand.scan(/\[\w+\X\]/).each do |card|
+        @deck << card
+      end
+      @dealer_hand.scan(/\[\w+\X\]/).each do |card|
+        @deck << card
+      end
+      @player_hand = ""
+      @dealer_hand = ""
+      100.times {@deck.shuffle!}
+      @y = 1
+      @wager = 0
+      clear_board
+      play
     elsif input == "n"
-      line_break
       center_print_str("I'll see ya.")
       sleep(1)
       system("clear")
     else
       center_print_str("Invalid input.")
-      play_again?
+      play_again
     end
   end
-end 
+end    
