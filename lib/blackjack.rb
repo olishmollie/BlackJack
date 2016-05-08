@@ -56,6 +56,7 @@ class BlackJack
 
     @chips = 500
     @wager = 0
+    @done = false
   end
 
   #------------------- GAMEBOARD METHODS -------------------#
@@ -82,6 +83,11 @@ class BlackJack
     @y -= 1
   end
 
+  def line_break
+    @y += 1
+    display_board
+  end
+
   def center_print_str(str)
     start = (@linewidth / 2) - (str.length / 2)
     index = 0
@@ -90,7 +96,7 @@ class BlackJack
       index += 1
       start += 1
     end
-    @y += 1
+    @y += 1 
     display_board
   end
 
@@ -131,6 +137,27 @@ class BlackJack
       @y += 1
     end
     display_board
+  end
+ 
+  def reset
+    @player_hand.scan(/\[\w+\X\]/).each do |card|
+      @deck << card
+    end
+    @dealer_hand.scan(/\[\w+\X\]/).each do |card|
+      @deck << card
+    end
+    @player_hand = ""
+    @dealer_hand = ""
+    100.times {@deck.shuffle!}
+    @y = 1
+    clear_board
+  end
+
+  def invalid_input
+    delete_row(@y)
+    center_print_str("Invalid input")
+    sleep(1)
+    delete_row(@y-1)
   end
 
   #------------------- SCORES AND BETTING -------------------#
@@ -180,22 +207,19 @@ class BlackJack
     end
   end
 
+
+  def naturals?
+    score(@player_hand) == 21 || score(@dealer_hand) == 21
+  end
+
+  def busted?
+    return true if @chips == 0
+  end
+
   #------------------- CONDITIONALS -------------------#
-
-  def natural?(hand)
-    score(hand) == 21
-  end
-
-  def hit?
-    @input == "y" || @input == ""
-  end
 
   def bust?
     score(@player_hand) > 21
-  end
-
-  def stay?
-    @input == "n"
   end
 
   def blackjack?
@@ -203,11 +227,32 @@ class BlackJack
   end
 
   def over?
-    bust? || stay? || blackjack?
+    bust? || blackjack? || stay? || naturals?
   end
 
   def really_over?
-    @chips <= 0
+    @done == true
+  end
+
+  def input
+    @input = nil
+    @input = gets.downcase.strip
+  end
+
+  def yes?
+    @input == "y" || @input == ""
+  end
+
+  def no?
+    @input == "n"
+  end
+
+  def stay?
+    @input == "n"
+  end
+
+  def wager?
+    @input.to_i > 0
   end
 
   #------------------- GAME PLAY -------------------#
@@ -223,19 +268,18 @@ class BlackJack
     hand << @deck.shift
   end
 
-  def turn
-    center_print_str("Hit?(Y/n)")
-    input = gets.downcase.strip
-    if input == "y" || input == ""
-      deal(@player_hand)
-      show_hands(3)
-    elsif input == "n"
-      center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
-      show_hands(4)
-      dealer_turn
-    else
-      center_print_str("Invalid input.")
-      turn
+  def player_turn
+    until over?
+      center_print_str("Hit?(Y/n)")
+      input
+      if yes?
+        deal(@player_hand)
+        show_hands(3)
+      elsif no?
+        nil
+      else
+        invalid_input
+      end
     end
   end
 
@@ -248,47 +292,70 @@ class BlackJack
       dealer_turn
     elsif score(@dealer_hand) > 21
       center_print_str("Dealer busted!")
-      endgame
+    elsif score(@dealer_hand) == 21
+      center_print_str("Dealer has 21!!")
     else
       center_print_str("Dealer stays at #{score(@dealer_hand)}.")
-      endgame
     end
   end
 
   def play
-    first_deal
-    center_print_str("Welcome to BlackJack!!!")
-    center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b")
-    wager
-    delete_row(3)
-    center_print_str("Chips: #{@chips}  Wager: #{@wager}")
-    if natural?(@dealer_hand) && !natural?(@player_hand)
-      show_hands(2)
-      center_print_str("You lose! Dealer has BlackJack.")
-      play_again
-    elsif natural?(@player_hand) && !natural?(@dealer_hand)
-      show_hands(2)
-      center_print_str("BlackJack -- you win #{@wager / 2} chips!")
-      @chips += @wager + (@wager / 2)
-      play_again
-    elsif natural?(@player_hand) && natural?(@dealer_hand)
-      show_hands(2)
-      center_print_string("You push! You and the dealer both have BlackJack.")
-      @chips += @wager
-      play_again
-    else
+    until really_over?
+      first_deal
+      center_print_str("Welcome to BlackJack!!!")
+      center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b")
+      wager
+      delete_row(3)
+      center_print_str("Chips: #{@chips}  Wager: #{@wager}")
       show_hands(1)
-      until over?
-        turn
+      player_turn
+      if bust?
+        nil
+      elsif naturals?
+        center_print_str("BlackJack!!")
+        if score(@dealer_hand) == 21
+          show_hands(4)
+        elsif score(@player_hand) == 21
+          nil
+        else
+          show_hands(2)
+        end
+      elsif stay? || blackjack?
+        if stay?
+          line_break
+          center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
+          show_hands(4)
+          dealer_turn
+        elsif blackjack?
+          center_print_str("You have 21!! Dealer has #{score(@dealer_hand)}.")
+          dealer_turn
+        end
       end
-      if blackjack?
-        center_print_str("BlackJack!!! Dealer has #{score(@dealer_hand)}.")
-        show_hands(2)
-        dealer_turn
-        endgame
-      elsif bust?
-        center_print_str("You busted with #{score(@player_hand)}!")
-        play_again
+      endgame
+      play_again
+    end
+  end
+      
+  def play_again
+    line_break
+    if busted?
+      center_print_str("You're out of chips. Better luck next time!")
+      sleep(1)
+      @done = true
+    else
+      @wager = 0
+      center_print_str("Play again?")
+      input
+      if yes?
+        reset
+      elsif no?
+        line_break
+        (@chips > 500) ? center_print_str("You won #{@chips - 500} chips! I'll see ya.") : center_print_str("You lost #{500 - @chips} chips! I'll see ya.")
+        sleep(1)
+        @done = true
+        system("clear")
+      else
+        invalid_input
       end
     end
   end
@@ -297,8 +364,11 @@ class BlackJack
     win = "You win #{@wager} chips! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     push = "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    bust = "You busted with #{score(@player_hand)}!"
     sleep(1)
-    if score(@dealer_hand) > 21
+    elsif score(@player_hand) > 21
+      center_print_str(bust)
+    elsif score(@dealer_hand) > 21
       center_print_str(win)
       @chips += (@wager * 2)
     elsif score(@player_hand) > score(@dealer_hand)
@@ -310,39 +380,5 @@ class BlackJack
     else
       center_print_str(lose)
     end
-    play_again
   end
-
-  def play_again
-    if really_over?
-      center_print_str("You're out of chips. Thanks for playing!")
-      sleep(2)
-      system("clear")
-      return nil
-    end
-    center_print_str("Play again?(Y/n)")
-    input = gets.downcase.strip
-    if input == "y" || input == ""
-      @player_hand.scan(/\[\w+\X\]/).each do |card|
-        @deck << card
-      end
-      @dealer_hand.scan(/\[\w+\X\]/).each do |card|
-        @deck << card
-      end
-      @player_hand = ""
-      @dealer_hand = ""
-      100.times {@deck.shuffle!}
-      @y = 1
-      @wager = 0
-      clear_board
-      play
-    elsif input == "n"
-      center_print_str("I'll see ya.")
-      sleep(1)
-      system("clear")
-    else
-      center_print_str("Invalid input.")
-      play_again
-    end
-  end
-end    
+end
