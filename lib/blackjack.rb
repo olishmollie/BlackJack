@@ -187,7 +187,7 @@ class BlackJack
   end
 
   def wager
-    center_print_str("You have #{@chips} chips. Wager?")
+    center_print_str("Wager?")
     input = gets.strip.scan(/\d+/)[0].to_i
     if input.to_i > 0 && input.to_i <= @chips
       @wager += input.to_i
@@ -208,8 +208,8 @@ class BlackJack
   end
 
 
-  def naturals?
-    score(@player_hand) == 21 || score(@dealer_hand) == 21
+  def natural?(hand)
+    hand.scan(/\w+/).length == 2 && score(hand) == 21
   end
 
   def busted?
@@ -227,7 +227,7 @@ class BlackJack
   end
 
   def over?
-    bust? || blackjack? || stay? || naturals?
+    bust? || blackjack? || stay? || natural?(@player_hand) || natural?(@dealer_hand)
   end
 
   def really_over?
@@ -302,20 +302,22 @@ class BlackJack
   def play
     until really_over?
       first_deal
+      right_print_str("Chips: #{@chips}")
       center_print_str("Welcome to BlackJack!!!")
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b")
       wager
       delete_row(3)
-      center_print_str("Chips: #{@chips}  Wager: #{@wager}")
+      center_print_str("Wager: #{@wager}")
       show_hands(1)
       player_turn
       if bust?
         nil
-      elsif naturals?
-        center_print_str("BlackJack!!")
+      elsif natural?(@player_hand) || natural?(@dealer_hand)
         if score(@dealer_hand) == 21
+          center_print_str("Dealer has BlackJack!!")
           show_hands(4)
         elsif score(@player_hand) == 21
+          center_print_str ("You have BlackJack!!")
           nil
         else
           show_hands(2)
@@ -342,6 +344,7 @@ class BlackJack
       center_print_str("You're out of chips. Better luck next time!")
       sleep(1)
       @done = true
+      system("clear")
     else
       @wager = 0
       center_print_str("Play again?")
@@ -365,12 +368,16 @@ class BlackJack
     push = "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     bust = "You busted with #{score(@player_hand)}!"
+    natural = "You win #{@wager + (@wager / 2)} chips!"
     sleep(1)
-    elsif score(@player_hand) > 21
+    if score(@player_hand) > 21
       center_print_str(bust)
     elsif score(@dealer_hand) > 21
       center_print_str(win)
       @chips += (@wager * 2)
+    elsif natural?(@player_hand)
+      center_print_str(natural)
+      @chips += ((@wager * 2) + (@wager / 2))
     elsif score(@player_hand) > score(@dealer_hand)
       center_print_str(win)
       @chips += (@wager * 2)
