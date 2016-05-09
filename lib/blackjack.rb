@@ -369,6 +369,7 @@ class BlackJack
     lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     bust = "You busted with #{score(@player_hand)}!"
     natural = "You win #{@wager + (@wager / 2)} chips!"
+    line_break
     sleep(1)
     if score(@player_hand) > 21
       center_print_str(bust)
