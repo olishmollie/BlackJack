@@ -220,7 +220,6 @@ class BlackJack
     input = gets.strip.scan(/\d+/)[0].to_i
     if input.to_i > 0 && input.to_i <= @chips
       @wager += input.to_i
-      @chips -= input.to_i
     elsif input.to_i > @chips
       delete_row(3)
       center_print_str("You don't have enough chips!")
@@ -245,7 +244,7 @@ class BlackJack
     return true if @chips == 0
   end
 
-  #------------------- CONDITIONALS -------------------#
+  #------------------- CONDITIONALS / INPUT -------------------#
 
   def bust?
     score(@player_hand) > 21
@@ -256,7 +255,7 @@ class BlackJack
   end
 
   def over?
-    bust? || blackjack? || stay? || natural?(@player_hand) || natural?(@dealer_hand)
+    bust? || blackjack? || stay? || natural?(@player_hand) || natural?(@dealer_hand) || double?
   end
 
   def really_over?
@@ -284,6 +283,10 @@ class BlackJack
     @input.to_i > 0
   end
 
+  def double?
+    @input == "d"
+  end
+
   #------------------- GAME PLAY -------------------#
 
   def first_deal
@@ -298,14 +301,24 @@ class BlackJack
   end
 
   def player_turn
+    count = 0
     until over?
-      center_print_str("Hit?(Y/n)")
+      if count == 0
+        center_print_str("Hit?(Y/n) Double?(d)")
+      else
+        center_print_str("Hit?(Y/n)")
+      end
       input
+      count += 1
       if yes?
         deal(@player_hand)
         show_hands(3)
       elsif no?
         nil
+      elsif double?
+        deal(@player_hand)
+        @wager *= 2
+        show_hands(3)
       else
         invalid_input
       end
@@ -351,7 +364,7 @@ class BlackJack
         else
           show_hands(2)
         end
-      elsif stay? || blackjack?
+      elsif stay? || blackjack? || double?
         if stay?
           line_break
           center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
@@ -359,6 +372,10 @@ class BlackJack
           dealer_turn
         elsif blackjack?
           center_print_str("You have 21!! Dealer has #{score(@dealer_hand)}.")
+          dealer_turn
+        elsif double?
+          center_print_str("You double your wager and stay at #{score(@player_hand)}.")
+          show_hands(4)
           dealer_turn
         end
       end
@@ -402,20 +419,21 @@ class BlackJack
     sleep(1)
     if score(@player_hand) > 21
       center_print_str(bust)
+      @chips -= @wager
     elsif score(@dealer_hand) > 21
       center_print_str(win)
-      @chips += (@wager * 2)
+      @chips += @wager
     elsif natural?(@player_hand)
       center_print_str(natural)
-      @chips += ((@wager * 2) + (@wager / 2))
+      @chips += (@wager + (@wager / 2))
     elsif score(@player_hand) > score(@dealer_hand)
       center_print_str(win)
-      @chips += (@wager * 2)
+      @chips += @wager
     elsif score(@player_hand) == score(@dealer_hand)
       center_print_str(push)
-      @chips += @wager
     else
       center_print_str(lose)
+      @chips -= @wager
     end
   end
 end
