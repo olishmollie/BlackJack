@@ -84,6 +84,8 @@ class BlackJack
     @chips = 500
     @wager = 0
     @done = false
+
+    @split_hand = ""
   end
 
   #------------------- GAMEBOARD METHODS -------------------#
@@ -159,9 +161,11 @@ class BlackJack
     elsif turn == 3
       left_print_str(@player_hand)
       @y += 1
-    else
+    elsif turn == 4
       right_print_str(@dealer_hand)
       @y += 1
+    elsif turn = 'split'
+      # TODO
     end
     display_board
   end
@@ -289,6 +293,10 @@ class BlackJack
     @player_hand.scan(/\w+/).length == 2 && @player_hand.scan(/\w+/)[0] == @player_hand.scan(/\w+/)[1]
   end
 
+  def split?
+    @input == "s"
+  end
+
   #------------------- GAME PLAY -------------------#
 
   def first_deal
@@ -323,6 +331,9 @@ class BlackJack
         deal(@player_hand)
         @wager *= 2
         show_hands(3)
+      elsif split?
+        @split_hand = @player_hand.scan(/\[\w+\P{L}\]/).pop
+        @player_hand = @player_hand.scan(/\[\w+\P{L}\]/)[0]
       else
         invalid_input
       end
