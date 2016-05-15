@@ -71,8 +71,6 @@ class BlackJack
       1000.times { deck.shuffle! }
     end
 
-    1000.times { decks.shuffle! }
-
     @y = 1
     @linewidth = 88
 
@@ -177,7 +175,7 @@ class BlackJack
     end
     @player_hand = ""
     @dealer_hand = ""
-    100.times {@deck.shuffle!}
+    1000.times {@deck.shuffle!}
     @y = 1
     clear_board
   end
@@ -189,7 +187,7 @@ class BlackJack
     delete_row(@y-1)
   end
 
-  #------------------- SCORES AND BETTING -------------------#
+  #------------------- SCORES / BETTING -------------------#
 
   def score(hand)
     score = 0
@@ -250,12 +248,12 @@ class BlackJack
     score(@player_hand) > 21
   end
 
-  def blackjack?
+  def twenty_one?
     score(@player_hand) == 21
   end
 
   def over?
-    bust? || blackjack? || stay? || natural?(@player_hand) || natural?(@dealer_hand) || double?
+    bust? || twenty_one? || stay? || natural?(@player_hand) || natural?(@dealer_hand) || double?
   end
 
   def really_over?
@@ -287,6 +285,10 @@ class BlackJack
     @input == "d"
   end
 
+  def can_split?
+    @player_hand.scan(/\w+/).length == 2 && @player_hand.scan(/\w+/)[0] == @player_hand.scan(/\w+/)[1]
+  end
+
   #------------------- GAME PLAY -------------------#
 
   def first_deal
@@ -303,7 +305,9 @@ class BlackJack
   def player_turn
     count = 0
     until over?
-      if count == 0
+      if count == 0 && can_split?
+        center_print_str("Hit?(Y/n) Double?(d) Split?(s)")
+      elsif count == 0 && !can_split?
         center_print_str("Hit?(Y/n) Double?(d)")
       else
         center_print_str("Hit?(Y/n)")
@@ -364,14 +368,15 @@ class BlackJack
         else
           show_hands(2)
         end
-      elsif stay? || blackjack? || double?
+      elsif stay? || twenty_one? || double?
         if stay?
           line_break
           center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
           show_hands(4)
           dealer_turn
-        elsif blackjack?
+        elsif twenty_one?
           center_print_str("You have 21!! Dealer has #{score(@dealer_hand)}.")
+          show_hands(4)
           dealer_turn
         elsif double?
           center_print_str("You double your wager and stay at #{score(@player_hand)}.")
@@ -411,7 +416,7 @@ class BlackJack
 
   def endgame
     win = "You win #{@wager} chips! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-    push = "You push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
+    push = "It's a push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
     bust = "You busted with #{score(@player_hand)}!"
     natural = "You win #{@wager + (@wager / 2)} chips!"
