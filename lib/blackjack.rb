@@ -225,10 +225,10 @@ class BlackJack
       end
     end
     if score > 21 && hand.include?("A")
-      if score - 10 <= 21
+      count = hand.count("A")
+      until count == 0 || score <= 21
         score -= 10
-      elsif score - 10 > 21
-        score -= (10 * hand.count("A"))
+        count -= 1
       end
     end
     score
@@ -371,6 +371,7 @@ class BlackJack
         show_hands('split')
         if bust?
           center_print_str("You bust with #{score(@player_hand)}!")
+          @chips -= @wager
           done = true
         end
       elsif no?
