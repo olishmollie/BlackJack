@@ -266,8 +266,16 @@ class BlackJack
     score(hand) == 21
   end
 
+  def can_surrender?(hand)
+    @player_hand.length == 1 && hand.scan(/\w+/).length == 2
+  end
+
+  def surrender?(hand)
+    @input == "x"
+  end
+
   def over?(hand)
-    bust?(hand) || twenty_one?(hand) || stay? || double?(hand)
+    bust?(hand) || twenty_one?(hand) || stay? || double?(hand) || surrender?(hand)
   end
 
   def done?
@@ -327,10 +335,16 @@ class BlackJack
     @input = nil
     @h = @player_hand.index(hand)
     until over?(hand)
-      if can_double?(hand) && can_split?(hand)
-        center_print_str("Hit?(Y/n) Double?(d) Split?(s)")
-      elsif can_double?(hand)
+      if can_double?(hand) && can_split?(hand) && can_surrender?(hand)
+        center_print_str("Hit?(Y/n) Double?(d) Split?(s) Surrender?(x)")
+      elsif can_double?(hand) && can_surrender?(hand)
+        center_print_str("Hit?(Y/n) Double?(d) Surrender?(x)")
+      elsif can_double?(hand) && !can_surrender?(hand)
         center_print_str("Hit?(Y/n) Double?(d)")
+      elsif !can_double?(hand) && can_surrender?(hand)
+        center_print_str("Hit?(Y/n) Surrender?(x)")
+      elsif can_double?(hand) && can_split?(hand) && !can_surrender?(hand)
+        center_print_str("Hit?(Y/n) Double?(Y/n) Split?(s)")
       else
         center_print_str("Hit?(Y/n)")
       end
@@ -380,6 +394,9 @@ class BlackJack
           player_turn(hand)
         end
         break
+      elsif surrender?(hand)
+        line_break
+        center_print_str("You surrender!")
       else
         invalid_input
       end
@@ -416,7 +433,7 @@ class BlackJack
         nil
       else
         player_turn(@player_hand[0])
-        unless @player_hand.count{ |hand| bust?(hand) } == @player_hand.length
+        unless @player_hand.count{ |hand| bust?(hand) } == @player_hand.length || surrender?(@player_hand[0])
           show_hands(4)
           dealer_turn
         end
@@ -446,6 +463,8 @@ class BlackJack
           winnings += @wager[0]
           line_break
         end
+    elsif surrender?(@player_hand[0])
+      losses += @wager[0] / 2
     else 
       @player_hand.each_index do |i|
         if bust?(@dealer_hand)
