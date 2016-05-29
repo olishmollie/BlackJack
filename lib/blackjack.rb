@@ -43,66 +43,56 @@ class BlackJack
     ]
 
     decks = [
-      [
+      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
+      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
+      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
+      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]",
+      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
+      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
+      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
+      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]",
+      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
+      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
+      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
+      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]",
+      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
+      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
+      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
+      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]",
+      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
+      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
+      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
+      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]",
       "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
       "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
       "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
       "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ],
-      [
-      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
-      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
-      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
-      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ],
-      [
-      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
-      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
-      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
-      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ],
-      [
-      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
-      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
-      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
-      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ],
-      [
-      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
-      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
-      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
-      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ],
-      [
-      "[A\u2660]", "[2\u2660]", "[3\u2660]", "[4\u2660]", "[5\u2660]", "[6\u2660]", "[7\u2660]", "[8\u2660]", "[9\u2660]", "[10\u2660]", "[J\u2660]", "[Q\u2660]", "[K\u2660]", 
-      "[A\u2665]", "[2\u2665]", "[3\u2665]", "[4\u2665]", "[5\u2665]", "[6\u2665]", "[7\u2665]", "[8\u2665]", "[9\u2665]", "[10\u2665]", "[J\u2665]", "[Q\u2665]", "[K\u2665]", 
-      "[A\u2666]", "[2\u2666]", "[3\u2666]", "[4\u2666]", "[5\u2666]", "[6\u2666]", "[7\u2666]", "[8\u2666]", "[9\u2666]", "[10\u2666]", "[J\u2666]", "[Q\u2666]", "[K\u2666]", 
-      "[A\u2663]", "[2\u2663]", "[3\u2663]", "[4\u2663]", "[5\u2663]", "[6\u2663]", "[7\u2663]", "[8\u2663]", "[9\u2663]", "[10\u2663]", "[J\u2663]", "[Q\u2663]", "[K\u2663]"
-      ]
     ]
 
-    decks.each do |deck|
-      1000.times { deck.shuffle! }
-    end
+    1000.times{ decks.shuffle! }
+    
+    @deck = decks
 
     @y = 1
     @linewidth = 88
 
     @board = board
 
-    @player_hand = ""
     @dealer_hand = ""
-    
-    @deck = decks.flatten
+    @player_hand = []
+    @h = 0
 
     @chips = 500
-    @wager = 0
+    @wager = []
     @done = false
-
-    @split_hand = ""
   end
 
   #------------------- GAMEBOARD METHODS -------------------#
+
+  def test
+    @player_hand << "[10\u2666][10\u2666]"
+    @dealer_hand << "[7\u2660][10\u2666]"
+  end
 
   def display_board
     system("clear")
@@ -115,14 +105,14 @@ class BlackJack
 
   def clear_board
     index = 1
-    while index < 24
-      @board[index].fill(" ", 1..90)
+    while index < @board.length - 1
+      @board[index].fill(" ", 1...@board[index].length - 1)
       index += 1
     end
   end
 
   def delete_row(y)
-    @board[y].fill(" ", 1..90)
+    @board[y].fill(" ", 1..@board[y].length - 2)
     @y -= 1
   end
 
@@ -165,47 +155,51 @@ class BlackJack
 
   def show_hands(turn)
     if turn == 1
-      left_print_str(@player_hand)
-      right_print_str("#{@dealer_hand[0..3]}[??]")
+      left_print_str(@player_hand[0])
+      right_print_str('['.concat(@dealer_hand.scan(/\w+\X/)[0] + '][' + @dealer_hand.scan(/\w+\X/)[1].sub(/\w+\X/, '??') + ']'))
       @y += 1
     elsif turn == 2
-      left_print_str(@player_hand)
+      left_print_str(@player_hand[@h])
       right_print_str(@dealer_hand)
       @y += 1
     elsif turn == 3
-      left_print_str(@player_hand)
+      left_print_str(@player_hand[@h])
       @y += 1
     elsif turn == 4
       right_print_str(@dealer_hand)
       @y += 1
-    elsif turn = 'split'
-      left_print_str(@player_hand)
-      @y += 1
-      left_print_str(@split_hand)
-      @y += 1
+    elsif turn == 'split'
+      @player_hand.each do |hand|
+        left_print_str(hand)
+        @y += 1
+      end
     end
     display_board
   end
  
   def reset
-    @player_hand.scan(/\[\w+\X\]/).each do |card|
-      @deck << card
+    @player_hand.each do |hand|
+      hand.scan(/\[\w+\X\]/).each do |card|
+        @deck << card
+      end
     end
+    @player_hand.clear
     @dealer_hand.scan(/\[\w+\X\]/).each do |card|
       @deck << card
     end
-    @player_hand = ""
-    @dealer_hand = ""
-    1000.times {@deck.shuffle!}
+    @dealer_hand.clear
+    1000.times { @deck.shuffle! }
+    @h = 0
     @y = 1
+    @wager = []
     clear_board
   end
 
   def invalid_input
-    delete_row(@y)
+    delete_row(@y - 1)
     center_print_str("Invalid input")
     sleep(1)
-    delete_row(@y-1)
+    delete_row(@y - 1)
   end
 
   #------------------- SCORES / BETTING -------------------#
@@ -236,9 +230,9 @@ class BlackJack
 
   def wager
     center_print_str("Wager?")
-    input = gets.strip.scan(/\d+/)[0].to_i
+    input = gets.strip.to_i
     if input.to_i > 0 && input.to_i <= @chips
-      @wager += input.to_i
+      @wager << input.to_i
     elsif input.to_i > @chips
       delete_row(3)
       center_print_str("You don't have enough chips!")
@@ -254,35 +248,33 @@ class BlackJack
     end
   end
 
+  #------------------- CONDITIONALS / INPUT -------------------#
+
+  def out_of_chips?
+    return true if @chips == 0
+  end
 
   def natural?(hand)
     hand.scan(/\w+/).length == 2 && score(hand) == 21
   end
 
-  def busted?
-    return true if @chips == 0
+  def bust?(hand)
+    score(hand) > 21
   end
 
-  #------------------- CONDITIONALS / INPUT -------------------#
-
-  def bust?
-    score(@player_hand) > 21
+  def twenty_one?(hand)
+    score(hand) == 21
   end
 
-  def twenty_one?
-    score(@player_hand) == 21
+  def over?(hand)
+    bust?(hand) || twenty_one?(hand) || stay? || double?(hand)
   end
 
-  def over?
-    bust? || twenty_one? || stay? || natural?(@player_hand) || natural?(@dealer_hand) || double?
-  end
-
-  def really_over?
+  def done?
     @done == true
   end
 
   def input
-    @input = nil
     @input = gets.downcase.strip
   end
 
@@ -302,12 +294,16 @@ class BlackJack
     @input.to_i > 0
   end
 
-  def double?
+  def double?(hand)
     @input == "d"
   end
 
-  def can_split?
-    @player_hand.scan(/\w+/).length == 2 && @player_hand.scan(/\w+/)[0] == @player_hand.scan(/\w+/)[1]
+  def can_split?(hand)
+    hand.scan(/\w+/).length == 2 && hand.scan(/\w+/)[0] == hand.scan(/\w+/)[1] && @player_hand.length * @wager[@h] <= @chips
+  end
+
+  def can_double?(hand)
+    hand.scan(/\w+/).length == 2 && 2 * @wager[@h] <= @chips
   end
 
   def split?
@@ -319,7 +315,7 @@ class BlackJack
   def first_deal
     @player_hand << @deck.shift
     @dealer_hand << @deck.shift
-    @player_hand << @deck.shift
+    @player_hand[0] << @deck.shift
     @dealer_hand << @deck.shift
   end
   
@@ -327,74 +323,63 @@ class BlackJack
     hand << @deck.shift
   end
 
-  def player_turn
-    count = 0 #To ensure doubles and splits only happen on first turn.
-    until over?
-      if count == 0 && can_split?
+  def player_turn(hand)
+    @input = nil
+    @h = @player_hand.index(hand)
+    until over?(hand)
+      if can_double?(hand) && can_split?(hand)
         center_print_str("Hit?(Y/n) Double?(d) Split?(s)")
-      elsif count == 0 && !can_split?
+      elsif can_double?(hand)
         center_print_str("Hit?(Y/n) Double?(d)")
       else
         center_print_str("Hit?(Y/n)")
       end
       input
-      count += 1
       if yes?
-        deal(@player_hand)
+        deal(hand)
         show_hands(3)
-      elsif no?
-        nil
-      elsif double?
-        deal(@player_hand)
-        @wager *= 2
+        if bust?(hand)
+          center_print_str("You bust with #{score(hand)}!")
+        elsif twenty_one?(hand)
+          center_print_str("You have 21!!")
+        end
+      elsif stay?
+        line_break
+        center_print_str("You stay at #{score(hand)}.")
+      elsif double?(hand)
+        deal(hand)
+        @wager[@h] *= 2
+        delete_row(3)
+        hold = @y
+        @y = 3
+        center_print_str("Wager: #{@wager}")
+        @y = hold + 1
         show_hands(3)
+        if bust?(hand)
+          center_print_str("You bust with #{score(hand)}!")
+        elsif twenty_one?(hand)
+          center_print_str("You have 21!!")
+        else
+          center_print_str("You double your wager and stay at #{score(hand)}.") 
+        end
       elsif split?
-        @split_hand = @player_hand.scan(/\[\w+\P{L}\]/).pop
-        @player_hand = @player_hand.scan(/\[\w+\P{L}\]/)[0]
-        deal(@player_hand)
-        deal(@split_hand)
+        @wager << @wager[@h]
+        delete_row(3)
+        hold = @y
+        @y = 3
+        center_print_str("Wager: #{@wager}")
+        @y = hold + 1
+        split = [@player_hand[@h].scan(/\[\w+\X\]/)[0], @player_hand[@h].scan(/\[\w+\X\]/)[1]]
+        @player_hand[@h] = split[0]
+        @player_hand << split[1]
+        @player_hand.each do |hand|
+          deal(hand) if hand.scan(/\w+\X/).length == 1
+        end
         show_hands('split')
+        @player_hand.each do |hand|
+          player_turn(hand)
+        end
         break
-      else
-        invalid_input
-      end
-    end
-  end
-
-  def split_turn
-    done = false
-    until done
-      center_print_str("Hit first hand?(Y/n)")
-      input
-      if yes?
-        deal(@player_hand)
-        show_hands('split')
-        if bust?
-          center_print_str("You bust with #{score(@player_hand)}!")
-          @chips -= @wager
-          done = true
-        end
-      elsif no?
-        nil
-        done = true
-      else
-        invalid_input
-      end
-    end
-    done = false
-    until done
-      center_print_str("Hit second hand?(Y/n)")
-      input
-      if yes?
-        deal(@split_hand)
-        show_hands('split')
-        if score(@split_hand) > 21
-          center_print_str("You bust with #{score(@split_hand)}!")
-          done = true
-        end
-      elsif no?
-        nil
-        done = true
       else
         invalid_input
       end
@@ -408,9 +393,9 @@ class BlackJack
       deal(@dealer_hand)
       show_hands(4)
       dealer_turn
-    elsif score(@dealer_hand) > 21
-      center_print_str("Dealer busts!")
-    elsif score(@dealer_hand) == 21
+    elsif bust?(@dealer_hand)
+      center_print_str("Dealer busts with #{score(@dealer_hand)}!")
+    elsif twenty_one?(@dealer_hand)
       center_print_str("Dealer has 21!!")
     else
       center_print_str("Dealer stays at #{score(@dealer_hand)}.")
@@ -418,7 +403,7 @@ class BlackJack
   end
 
   def play
-    until really_over?
+    until done?
       first_deal
       right_print_str("Chips: #{@chips}")
       center_print_str("Welcome to BlackJack!!!")
@@ -427,53 +412,82 @@ class BlackJack
       delete_row(3)
       center_print_str("Wager: #{@wager}")
       show_hands(1)
-      player_turn
-      if split?
-        split_turn
-      end
-      if bust?
+      if natural?(@player_hand[@h]) || natural?(@dealer_hand)
         nil
-      elsif natural?(@player_hand) || natural?(@dealer_hand)
-        if score(@dealer_hand) == 21
-          center_print_str("Dealer has BlackJack!!")
-          show_hands(4)
-        elsif score(@player_hand) == 21
-          center_print_str ("You have BlackJack!!")
-          nil
-        else
-          show_hands(2)
-        end
-      elsif stay? || twenty_one? || double?
-        if stay?
-          line_break
-          center_print_str("You stay at #{score(@player_hand)}. Dealer has #{score(@dealer_hand)}.")
-          show_hands(4)
-          dealer_turn
-        elsif twenty_one?
-          center_print_str("You have 21!! Dealer has #{score(@dealer_hand)}.")
-          show_hands(4)
-          dealer_turn
-        elsif double?
-          center_print_str("You double your wager and stay at #{score(@player_hand)}.")
+      else
+        player_turn(@player_hand[0])
+        unless @player_hand.count{ |hand| bust?(hand) } == @player_hand.length
           show_hands(4)
           dealer_turn
         end
       end
+      line_break
       endgame
+      line_break
       play_again
     end
   end
-      
+
+  def endgame
+    winnings = 0
+    losses = 0
+    sleep(1)
+    if natural?(@player_hand[0]) || natural?(@dealer_hand)
+        if score(@player_hand[0]) == 21 && score(@dealer_hand) == 21
+          center_print_str("You and the dealer both have BlackJack!!")
+          show_hands(4)
+        elsif score(@dealer_hand) == 21
+          center_print_str("Dealer has BlackJack!!")
+          losses += @wager[0]
+          show_hands(4)
+        elsif score(@player_hand[@h]) == 21
+          center_print_str ("You have BlackJack!!")
+          @wager[0] += @wager[0] / 2
+          winnings += @wager[0]
+          line_break
+        end
+    else 
+      @player_hand.each_index do |i|
+        if bust?(@dealer_hand)
+          if score(@player_hand[i]) <= 21
+            winnings += @wager[i]
+          else
+            losses += @wager[i]
+          end
+        elsif !bust?(@dealer_hand)
+          if !bust?(@player_hand[i]) && score(@player_hand[i]) > score(@dealer_hand)
+            winnings += @wager[i]
+          elsif bust?(@player_hand[i]) || score(@player_hand[i]) < score(@dealer_hand)
+            losses += @wager[i]
+          end
+        end
+      end
+    end
+    net = winnings - losses
+    if net > 0
+      center_print_str("You win #{net} chips!")
+    elsif net < 0
+      center_print_str("You lost #{net.abs} chips!")
+    else
+      center_print_str("It's a push!")
+    end
+    @chips += net
+  end
+
   def play_again
-    line_break
-    if busted?
+    @input = nil
+    hold = @y
+    @y = 1
+    right_print_str("   Chips: #{@chips}")
+    @y = hold
+    if out_of_chips?
       center_print_str("You're out of chips. Better luck next time!")
       sleep(1)
       @done = true
       system("clear")
     else
       @wager = 0
-      center_print_str("Play again?")
+      center_print_str("Play again?(Y/n)")
       input
       if yes?
         reset
@@ -485,35 +499,8 @@ class BlackJack
         system("clear")
       else
         invalid_input
+        play_again
       end
-    end
-  end
-
-  def endgame
-    win = "You win #{@wager} chips! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-    push = "It's a push! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-    lose = "You lose! Your score: #{score(@player_hand)} Dealer score: #{score(@dealer_hand)}"
-    bust = "You bust with #{score(@player_hand)}!"
-    natural = "You win #{@wager + (@wager / 2)} chips!"
-    line_break
-    sleep(1)
-    if score(@player_hand) > 21
-      center_print_str(bust)
-      @chips -= @wager
-    elsif score(@dealer_hand) > 21
-      center_print_str(win)
-      @chips += @wager
-    elsif natural?(@player_hand)
-      center_print_str(natural)
-      @chips += (@wager + (@wager / 2))
-    elsif score(@player_hand) > score(@dealer_hand)
-      center_print_str(win)
-      @chips += @wager
-    elsif score(@player_hand) == score(@dealer_hand)
-      center_print_str(push)
-    else
-      center_print_str(lose)
-      @chips -= @wager
     end
   end
 end
