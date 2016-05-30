@@ -80,6 +80,8 @@ class BlackJack
 
     @dealer_hand = ""
     @player_hand = []
+    @status = {}
+    @valid_moves = ['y', 'n', 'd', 's', 'x']
     @h = 0
 
     @chips = 500
@@ -90,8 +92,9 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
 
   def test
-    @player_hand << "[10\u2666][10\u2666]"
-    @dealer_hand << "[7\u2660][10\u2666]"
+    @player_hand << "[2\u2660][2\u2660]"
+    @dealer_hand << @deck.shift
+    @dealer_hand << @deck.shift
   end
 
   def display_board
@@ -155,22 +158,18 @@ class BlackJack
 
   def show_hands(turn)
     if turn == 1
-      left_print_str(@player_hand[0])
+      left_print_str(@player_hand[0] + " (#{score(@player_hand[0])})")
       right_print_str('['.concat(@dealer_hand.scan(/\w+\X/)[0] + '][' + @dealer_hand.scan(/\w+\X/)[1].sub(/\w+\X/, '??') + ']'))
       @y += 1
     elsif turn == 2
-      left_print_str(@player_hand[@h])
-      right_print_str(@dealer_hand)
+      left_print_str(@player_hand[@h] + " (#{score(@player_hand[@h])})")
       @y += 1
     elsif turn == 3
-      left_print_str(@player_hand[@h])
-      @y += 1
-    elsif turn == 4
-      right_print_str(@dealer_hand)
+      right_print_str("(#{score(@dealer_hand)}) " + @dealer_hand)
       @y += 1
     elsif turn == 'split'
-      @player_hand.each do |hand|
-        left_print_str(hand)
+      @player_hand.each_with_index do |hand, i|
+        left_print_str("#{i + 1}. #{hand} (#{score(hand)})")
         @y += 1
       end
     end
@@ -192,7 +191,24 @@ class BlackJack
     @h = 0
     @y = 1
     @wager = []
+    @status = []
     clear_board
+  end
+
+  def print_wager
+    str = []
+    @wager.each_with_index do |wager, i|
+      str << "#{i + 1}. #{wager}" 
+    end
+    delete_row(3)
+    hold = @y
+    @y = 3
+    if @wager.length > 1
+      center_print_str("#{str.join(' ')}")
+    else
+      center_print_str("#{@wager[0]}")
+    end
+    @y = hold + 1
   end
 
   def invalid_input
@@ -250,12 +266,24 @@ class BlackJack
 
   #------------------- CONDITIONALS / INPUT -------------------#
 
+  def valid_moves(hand)
+    @valid_moves = ['y', 'n', 'd', 's', 'x']
+    @valid_moves.delete('d') if !can_double?(hand)
+    @valid_moves.delete('s') if !can_split?(hand)
+    @valid_moves.delete('x') if !can_surrender?(hand)
+    if split_aces?(hand)
+      @valid_moves.delete('y')
+      @valid_moves.delete('d')
+      @valid_moves.delete('x')
+    end
+  end
+  
   def out_of_chips?
     return true if @chips == 0
   end
 
   def natural?(hand)
-    hand.scan(/\w+/).length == 2 && score(hand) == 21
+    @player_hand.length == 1 && hand.scan(/\w+/).length == 2 && score(hand) == 21
   end
 
   def bust?(hand)
@@ -271,7 +299,7 @@ class BlackJack
   end
 
   def surrender?(hand)
-    @input == "x"
+    @input == 's'
   end
 
   def over?(hand)
@@ -307,7 +335,7 @@ class BlackJack
   end
 
   def can_split?(hand)
-    hand.scan(/\w+/).length == 2 && hand.scan(/\w+/)[0] == hand.scan(/\w+/)[1] && @player_hand.length * @wager[@h] <= @chips
+    hand.scan(/\w+/).length == 2 && hand.scan(/\w+/)[0] == hand.scan(/\w+/)[1] && @player_hand.length * @wager[@h] <= @chips && @player_hand.length <= 4
   end
 
   def can_double?(hand)
@@ -316,6 +344,10 @@ class BlackJack
 
   def split?
     @input == "s"
+  end
+
+  def split_aces?(hand)
+    @player_hand.length > 1 && hand.scan(/\w+/)[0] == "A"
   end
 
   #------------------- GAME PLAY -------------------#
@@ -331,84 +363,92 @@ class BlackJack
     hand << @deck.shift
   end
 
-  def player_turn(hand)
-    @input = nil
-    @h = @player_hand.index(hand)
-    until over?(hand)
-      if can_double?(hand) && can_split?(hand) && can_surrender?(hand)
-        center_print_str("Hit?(Y/n) Double?(d) Split?(s) Surrender?(x)")
-      elsif can_double?(hand) && can_surrender?(hand)
-        center_print_str("Hit?(Y/n) Double?(d) Surrender?(x)")
-      elsif can_double?(hand) && !can_surrender?(hand)
-        center_print_str("Hit?(Y/n) Double?(d)")
-      elsif !can_double?(hand) && can_surrender?(hand)
-        center_print_str("Hit?(Y/n) Surrender?(x)")
-      elsif can_double?(hand) && can_split?(hand) && !can_surrender?(hand)
-        center_print_str("Hit?(Y/n) Double?(Y/n) Split?(s)")
-      else
-        center_print_str("Hit?(Y/n)")
-      end
-      input
-      if yes?
-        deal(hand)
-        show_hands(3)
-        if bust?(hand)
-          center_print_str("You bust with #{score(hand)}!")
-        elsif twenty_one?(hand)
-          center_print_str("You have 21!!")
-        end
-      elsif stay?
-        line_break
-        center_print_str("You stay at #{score(hand)}.")
-      elsif double?(hand)
-        deal(hand)
-        @wager[@h] *= 2
-        delete_row(3)
-        hold = @y
-        @y = 3
-        center_print_str("Wager: #{@wager}")
-        @y = hold + 1
-        show_hands(3)
-        if bust?(hand)
-          center_print_str("You bust with #{score(hand)}!")
-        elsif twenty_one?(hand)
-          center_print_str("You have 21!!")
-        else
-          center_print_str("You double your wager and stay at #{score(hand)}.") 
-        end
-      elsif split?
-        @wager << @wager[@h]
-        delete_row(3)
-        hold = @y
-        @y = 3
-        center_print_str("Wager: #{@wager}")
-        @y = hold + 1
-        split = [@player_hand[@h].scan(/\[\w+\X\]/)[0], @player_hand[@h].scan(/\[\w+\X\]/)[1]]
-        @player_hand[@h] = split[0]
-        @player_hand << split[1]
-        @player_hand.each do |hand|
-          deal(hand) if hand.scan(/\w+\X/).length == 1
-        end
-        show_hands('split')
-        @player_hand.each do |hand|
-          player_turn(hand)
-        end
-        break
-      elsif surrender?(hand)
-        line_break
-        center_print_str("You surrender!")
-      else
-        invalid_input
-      end
+  def split(hand)
+    @wager << @wager[@h]
+    print_wager
+    split = [hand.scan(/\[\w+\X\]/)[0], hand.scan(/\[\w+\X\]/)[1]]
+    @player_hand[@h] = split[0]
+    @player_hand << split[1]
+    @player_hand.each do |hand|
+      deal(hand) if hand.scan(/\w+\X/).length == 1
     end
   end
 
+  def player_turn(hand)
+    @input = nil
+    @h = @player_hand.index(hand)
+    if @status[@h] == '21' || @status[@h] == 'bust' || @status[@h] == 'stay'
+      nil
+    elsif split_aces?(hand) && !can_split?(hand)
+      nil
+    else
+      until over?(hand)
+        valid_moves(hand)
+        if split_aces?(hand) && can_split?(hand)
+          center_print_str("Split?(s)")
+        elsif can_double?(hand) && can_split?(hand) && can_surrender?(hand)
+         center_print_str("Hit?(Y/n) Double?(d) Split?(s) Surrender?(x)")
+        elsif can_double?(hand) && can_split?(hand)
+         center_print_str("Hit?(Y/n) Double?(Y/n) Split?(s)")
+        elsif can_double?(hand) && can_surrender?(hand)
+          center_print_str("Hit?(Y/n) Double?(d) Surrender?(x)")
+        elsif can_double?(hand)
+         center_print_str("Hit?(Y/n) Double?(d)")
+        elsif can_surrender?(hand)
+          center_print_str("Hit?(Y/n) Surrender?(x)")
+        else
+          center_print_str("Hit?(Y/n)")
+        end
+        input
+        if yes? && @valid_moves.include?('y')
+          deal(hand)
+          show_hands(2)
+          if bust?(hand)
+            @status[@h] = 'bust'
+            center_print_str("You bust with #{score(hand)}!")
+          elsif twenty_one?(hand)
+            @status[@h] = '21'
+            center_print_str("You have 21!!")
+          end
+        elsif stay? && @valid_moves.include?('n')
+          @status[@h] = 'stay'
+          center_print_str("You stay at #{score(hand)}.")
+        elsif double?(hand) && @valid_moves.include?('d')
+          deal(hand)
+          show_hands(2)
+          @wager[@h] *= 2
+          print_wager
+          if bust?(hand)
+            center_print_str("You bust with #{score(hand)}!")
+          elsif twenty_one?(hand)
+            @status[@h] = '21'
+            center_print_str("You have 21!!")
+          else
+            center_print_str("You double your wager and stay at #{score(hand)}.") 
+          end
+          @status[@h] = 'stay'
+        elsif split? && @valid_moves.include?('s')
+          split(hand)
+          show_hands('split')
+          @player_hand.each do |hand|
+            player_turn(hand)
+          end
+          break
+        elsif surrender?(hand) && @valid_moves.include?('x')
+          center_print_str("You surrender!")
+        else
+          invalid_input
+        end
+      end
+    end
+  end
+  
   def dealer_turn
     sleep(1)
     if score(@dealer_hand) < 17
       center_print_str("Dealer hits.")
       deal(@dealer_hand)
-      show_hands(4)
+      show_hands(3)
       dealer_turn
     elsif bust?(@dealer_hand)
       center_print_str("Dealer busts with #{score(@dealer_hand)}!")
@@ -427,20 +467,18 @@ class BlackJack
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b")
       wager
       delete_row(3)
-      center_print_str("Wager: #{@wager}")
+      center_print_str("#{@wager[0]}")
       show_hands(1)
       if natural?(@player_hand[@h]) || natural?(@dealer_hand)
         nil
       else
         player_turn(@player_hand[0])
         unless @player_hand.count{ |hand| bust?(hand) } == @player_hand.length || surrender?(@player_hand[0])
-          show_hands(4)
+          show_hands(3)
           dealer_turn
         end
       end
-      line_break
       endgame
-      line_break
       play_again
     end
   end
@@ -452,16 +490,15 @@ class BlackJack
     if natural?(@player_hand[0]) || natural?(@dealer_hand)
         if score(@player_hand[0]) == 21 && score(@dealer_hand) == 21
           center_print_str("You and the dealer both have BlackJack!!")
-          show_hands(4)
+          show_hands(3)
         elsif score(@dealer_hand) == 21
           center_print_str("Dealer has BlackJack!!")
           losses += @wager[0]
-          show_hands(4)
+          show_hands(3)
         elsif score(@player_hand[@h]) == 21
           center_print_str ("You have BlackJack!!")
           @wager[0] += @wager[0] / 2
           winnings += @wager[0]
-          line_break
         end
     elsif surrender?(@player_hand[0])
       losses += @wager[0] / 2
@@ -486,7 +523,7 @@ class BlackJack
     if net > 0
       center_print_str("You win #{net} chips!")
     elsif net < 0
-      center_print_str("You lost #{net.abs} chips!")
+      center_print_str("You lose #{net.abs} chips!")
     else
       center_print_str("It's a push!")
     end
@@ -511,7 +548,6 @@ class BlackJack
       if yes?
         reset
       elsif no?
-        line_break
         (@chips > 500) ? center_print_str("You won #{@chips - 500} chips! I'll see ya.") : center_print_str("You lost #{500 - @chips} chips! I'll see ya.")
         sleep(1)
         @done = true
