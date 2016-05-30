@@ -92,7 +92,7 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
 
   def test
-    @player_hand << "[2\u2660][2\u2660]"
+    @player_hand << "[A\u2660][A\u2665]"
     @dealer_hand << @deck.shift
     @dealer_hand << @deck.shift
   end
