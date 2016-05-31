@@ -384,21 +384,24 @@ class BlackJack
     else
       until over?(hand)
         valid_moves(hand)
+        str = ""
+        str << "#{@h + 1}. " if @player_hand.length > 1
         if split_aces?(hand) && can_split?(hand)
-          center_print_str("Split?(s)")
+          str << "Split?(s)"
         elsif can_double?(hand) && can_split?(hand) && can_surrender?(hand)
-         center_print_str("Hit?(Y/n) Double?(d) Split?(s) Surrender?(x)")
+         str << "Hit?(Y/n) Double?(d) Split?(s) Surrender?(x)"
         elsif can_double?(hand) && can_split?(hand)
-         center_print_str("Hit?(Y/n) Double?(Y/n) Split?(s)")
+         str << "Hit?(Y/n) Double?(Y/n) Split?(s)"
         elsif can_double?(hand) && can_surrender?(hand)
-          center_print_str("Hit?(Y/n) Double?(d) Surrender?(x)")
+          str << "Hit?(Y/n) Double?(d) Surrender?(x)"
         elsif can_double?(hand)
-         center_print_str("Hit?(Y/n) Double?(d)")
+         str << "Hit?(Y/n) Double?(d)"
         elsif can_surrender?(hand)
-          center_print_str("Hit?(Y/n) Surrender?(x)")
+          str << "Hit?(Y/n) Surrender?(x)"
         else
-          center_print_str("Hit?(Y/n)")
+          str << "Hit?(Y/n)"
         end
+        center_print_str(str)
         input
         if yes? && @valid_moves.include?('y')
           deal(hand)
