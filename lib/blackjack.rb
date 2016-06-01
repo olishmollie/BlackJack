@@ -26,7 +26,6 @@ class BlackJack
     
     @deck = deck
 
-    @y = 1
     @linewidth = 68
 
     @board = board
@@ -79,11 +78,6 @@ class BlackJack
     end
   end
 
-  def line_break
-    @y += 1
-    display_board
-  end
-
   def center_print_str(str, row)
     delete_row(3)
     start = (@linewidth / 2) - (str.length / 2)
@@ -93,7 +87,6 @@ class BlackJack
       index += 1
       start += 1
     end
-    @y += 1 
     display_board
   end
 
@@ -123,21 +116,17 @@ class BlackJack
     if turn == 1
       left_print_str(@player_hand[0] + " ($#{@wager[0].to_i})", 5)
       right_print_str('['.concat(@dealer_hand.scan(/\w+\X/)[0] + '][' + @dealer_hand.scan(/\w+\X/)[1].sub(/\w+\X/, '??') + ']'), 5)
-      @y += 1
     elsif turn == 2
       if @player_hand.length > 1
         left_print_str("#{@h + 1}. ".concat(@player_hand[@h] + " ($#{@wager[@h].to_i})"), 5 + @h)
       else
         left_print_str(@player_hand[0] + " ($#{@wager[@h].to_i})", 5)
       end
-      @y += 1
     elsif turn == 3
       right_print_str(@dealer_hand, 5)
-      @y += 1
     elsif turn == 'split'
       @player_hand.each_with_index do |hand, i|
         left_print_str("#{i + 1}. ".concat(hand + " ($#{@wager[@h].to_i})"), 5 + i)
-        @y += 1
       end
     end
     display_board
@@ -156,7 +145,6 @@ class BlackJack
     @dealer_hand.clear
     1000.times { @deck.shuffle! }
     @h = 0
-    @y = 1
     @wager = []
     @status = []
     clear_board
