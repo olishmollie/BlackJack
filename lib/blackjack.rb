@@ -36,7 +36,7 @@ class BlackJack
     @valid_moves = ['y', 'n', 'd', 's', 'x']
     @h = 0
 
-    @chips = 1500.00
+    @chips = 1000.00
     @wager = []
     @done = false
   end
@@ -44,7 +44,7 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
   
   def test
-    @player_hand << "[8\u2660][8\u2665]"
+    @player_hand << "[A\u2660][J\u2665]"
     @dealer_hand << "[2\u2660][3\u2665]"
   end
 
@@ -310,7 +310,7 @@ class BlackJack
 
   def player_turn(hand)
     @input = nil
-    @h = @player_hand.index(hand) # THIS COULD CREATE A BUG IF HANDS ARE EXACTLY THE SAME
+    @h = @player_hand.index(hand) # THIS COULD CAUSE A BUG IF HANDS ARE EXACTLY THE SAME USING MORE THAN ONE DECK
     if @status[@h] == '21' || @status[@h] == 'bust' || @status[@h] == 'stay'
       nil
     elsif split_aces?(hand) && !can_split?(hand)
@@ -399,7 +399,8 @@ class BlackJack
   def play
     until done?
       first_deal
-      right_print_str("Chips: $#{'%.2f' % @chips}", 1)
+      left_print_str("$1/$500", 1)
+      right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
       wager
@@ -432,7 +433,7 @@ class BlackJack
           show_hands(3)
         elsif score(@player_hand[@h]) == 21
           center_print_str("You have BlackJack!!", 3)
-          @wager[0] += @wager[0] / 2
+          @wager[0] += @wager[0] / 5
           winnings += @wager[0]
         end
     elsif surrender?(@player_hand[0])
@@ -464,7 +465,7 @@ class BlackJack
       center_print_str("It's a push!", 3)
     end
     @chips += net
-    right_print_str("Chips: $#{'%.2f' % @chips}", 1)
+    right_print_str("$#{'%.2f' % @chips}", 1)
   end
 
   def play_again
@@ -481,7 +482,7 @@ class BlackJack
       if yes?
         reset
       elsif no?
-        (@chips > 1500) ? center_print_str("You won $#{'%.2f' % (@chips - 1500)}! I'll see ya.", 3) : center_print_str("You lost $#{'%.2f' % (1500 - @chips)}! I'll see ya.", 3)
+        (@chips > 1000) ? center_print_str("You won $#{'%.2f' % (@chips - 1000)}! I'll see ya.", 3) : center_print_str("You lost $#{'%.2f' % (1000 - @chips)}! I'll see ya.", 3)
         sleep(1)
         @done = true
         system("clear")
