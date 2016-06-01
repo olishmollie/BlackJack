@@ -44,8 +44,8 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
   
   def test
-    @player_hand << "[A\u2660][J\u2665]"
-    @dealer_hand << "[2\u2660][3\u2665]"
+    @player_hand << "[A\u2660][3\u2665]"
+    @dealer_hand << "[A\u2660][2\u2665]"
   end
 
   def display_board
@@ -184,13 +184,21 @@ class BlackJack
   end
 
   def wager
+    max = 500
+    min = 1
     center_print_str("Please enter your wager.", 3)
     input = gets.strip
-    if input.to_f > 0 && input.to_f <= @chips
+    if input.to_i > min && input.to_i <= max && input.to_i <= @chips && input.scan(/\W+/) == []
       @wager << input.to_f
     elsif input.to_i > @chips
       delete_row(3)
       center_print_str("You don't have enough chips!", 3)
+      sleep(1)
+      delete_row(3)
+      wager
+    elsif input.to_i > max
+      delete_row(3)
+      center_print_str("Maximum bet is $500!", 3)
       sleep(1)
       delete_row(3)
       wager
@@ -201,6 +209,27 @@ class BlackJack
       delete_row(3)
       wager
     end
+  end
+
+  def insurance
+    center_print_str("Insurance?(Y/n)", 3)
+    input
+    if yes?
+      if score(@dealer_hand) == 21
+        @wager[0] = 0
+      else
+        @chips -= @wager[0] / 2
+        right_print_str("$#{'%2.f' % @chips}", 1)
+        center_print_str("You lose $#{'%2.f' % (@wager[0] / 2)}!", 3)
+        sleep(1)
+      end
+    elsif no?
+      nil
+    else
+      invalid_input(3)
+      insurance
+    end
+    @input = nil
   end
 
   #------------------- CONDITIONALS / INPUT -------------------#
@@ -405,6 +434,9 @@ class BlackJack
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
       wager
       show_hands(1)
+      if @dealer_hand.scan(/\w+/)[0] = "A"
+      insurance
+      end
       if natural?(@player_hand[@h]) || natural?(@dealer_hand)
         nil
       else
@@ -457,6 +489,8 @@ class BlackJack
     end
     sleep(1)
     net = winnings - losses
+    @chips += net
+    right_print_str("$#{'%.2f' % @chips}", 1)
     if net > 0
       center_print_str("You win $#{'%.2f' % net}!", 3)
     elsif net < 0
@@ -464,8 +498,6 @@ class BlackJack
     else
       center_print_str("It's a push!", 3)
     end
-    @chips += net
-    right_print_str("$#{'%.2f' % @chips}", 1)
   end
 
   def play_again
