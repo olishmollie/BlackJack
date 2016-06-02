@@ -44,7 +44,7 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
   
   def test
-    @player_hand << "[A\u2660][3\u2665]"
+    @player_hand << "[2\u2660][2\u2660]"
     @dealer_hand << "[A\u2660][2\u2665]"
   end
 
@@ -299,7 +299,7 @@ class BlackJack
   end
 
   def can_split?(hand)
-    hand.scan(/\w+/).length == 2 && hand.scan(/\w+/)[0] == hand.scan(/\w+/)[1] && 2 * @wager.reduce(:+) <= @chips && @player_hand.length <= 4
+    hand.scan(/\w+/).length == 2 && hand.scan(/\w+/)[0] == hand.scan(/\w+/)[1] && 2 * @wager.reduce(:+) <= @chips && @player_hand.length < 4
   end
 
   def can_double?(hand)
@@ -339,7 +339,7 @@ class BlackJack
 
   def player_turn(hand)
     @input = nil
-    @h = @player_hand.index(hand) # THIS COULD CAUSE A BUG IF HANDS ARE EXACTLY THE SAME USING MORE THAN ONE DECK
+    @h += 1 if @player_hand.length > 1 && @h < @player_hand.length - 1
     if @status[@h] == '21' || @status[@h] == 'bust' || @status[@h] == 'stay'
       nil
     elsif split_aces?(hand) && !can_split?(hand)
@@ -393,6 +393,7 @@ class BlackJack
           end
           @status[@h] = 'stay'
         elsif split? && @valid_moves.include?('s')
+          @h -= 1
           split(hand)
           show_hands('split')
           @player_hand.each do |hand|
