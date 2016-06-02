@@ -114,19 +114,19 @@ class BlackJack
 
   def show_hands(turn)
     if turn == 1
-      left_print_str(@player_hand[0] + " ($#{@wager[0].to_i})", 5)
+      left_print_str("(#{score(@player_hand[0])}) " + @player_hand[0] + " ($#{@wager[0].to_i})", 5)
       right_print_str('['.concat(@dealer_hand.scan(/\w+\X/)[0] + '][' + @dealer_hand.scan(/\w+\X/)[1].sub(/\w+\X/, '??') + ']'), 5)
     elsif turn == 2
       if @player_hand.length > 1
-        left_print_str("#{@h + 1}. ".concat(@player_hand[@h] + " ($#{@wager[@h].to_i})"), 5 + @h)
+        left_print_str("#{@h + 1}. ".concat("(#{score(@player_hand[@h])}) " + @player_hand[@h] + " ($#{@wager[@h].to_i})"), 5 + @h)
       else
-        left_print_str(@player_hand[0] + " ($#{@wager[@h].to_i})", 5)
+        left_print_str("(#{score(@player_hand[@h])}) " + @player_hand[0] + " ($#{@wager[@h].to_i})", 5)
       end
     elsif turn == 3
-      right_print_str(@dealer_hand, 5)
+      right_print_str(@dealer_hand + " (#{score(@dealer_hand)}) ", 5)
     elsif turn == 'split'
       @player_hand.each_with_index do |hand, i|
-        left_print_str("#{i + 1}. ".concat(hand + " ($#{@wager[@h].to_i})"), 5 + i)
+        left_print_str("#{i + 1}. ".concat("(#{score(hand)}) " + hand + " ($#{@wager[@h].to_i})"), 5 + i)
       end
     end
     display_board
@@ -434,7 +434,7 @@ class BlackJack
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
       wager
       show_hands(1)
-      if @dealer_hand.scan(/\w+/)[0] = "A"
+      if @dealer_hand.scan(/\w+/)[0] == "A"
       insurance
       end
       if natural?(@player_hand[@h]) || natural?(@dealer_hand)
