@@ -439,7 +439,7 @@ class BlackJack
       center_print_str("Welcome to BlackJack!!!", 1)
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
       right_print_str("BJ pays 7:5", 8)
-      right_print_str("Dealer hits soft 17", 9)
+      right_print_str("Dealer H17", 9)
       wager
       show_hands(1)
       if @dealer_hand.scan(/\w+/)[0] == "A"
