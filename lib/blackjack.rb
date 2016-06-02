@@ -433,7 +433,7 @@ class BlackJack
 
   def play
     until done?
-      test
+      first_deal
       left_print_str("$1/$500", 1)
       right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
