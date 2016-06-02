@@ -46,7 +46,7 @@ class BlackJack
   
   def test
     @player_hand << "[A\u2660][J\u2660]"
-    @dealer_hand << "[A\u2660][J\u2665]"
+    @dealer_hand << "[A\u2660][3\u2665]"
   end
 
   def display_board
@@ -219,11 +219,11 @@ class BlackJack
     if yes?
       @insurance = true
       if score(@dealer_hand) == 21 && score(@player_hand[0]) != 21
-        @wager[0] = 0
+        @wager[0] = 0.0
       elsif score(@dealer_hand) != 21
         @chips -= @wager[0] / 2
-        right_print_str("$#{'%2.f' % @chips}", 1)
-        center_print_str("You lose $#{'%2.f' % (@wager[0] / 2)}!", 3)
+        right_print_str("$#{'%.2f' % @chips}", 1)
+        center_print_str("You lose $#{'%.2f' % (@wager[0] / 2.0).to_f}!", 3)
         sleep(1)
       else
         nil
@@ -433,7 +433,7 @@ class BlackJack
 
   def play
     until done?
-      first_deal
+      test
       left_print_str("$1/$500", 1)
       right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
@@ -479,8 +479,7 @@ class BlackJack
           show_hands(3)
         elsif score(@player_hand[@h]) == 21
           center_print_str("You have BlackJack!!", 3)
-          @wager[0] += 2 * @wager[0] / 5
-          winnings += @wager[0]
+          winnings += 2 * @wager[0] / 5
           show_hands(3)
         end
     elsif surrender?(@player_hand[0])
@@ -503,7 +502,7 @@ class BlackJack
       end
     end
     sleep(1)
-    net = winnings - losses
+    net = (winnings - losses).to_f
     @chips += net
     right_print_str("$#{'%.2f' % @chips}", 1)
     if net > 0
