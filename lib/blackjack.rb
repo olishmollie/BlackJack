@@ -43,11 +43,6 @@ class BlackJack
   end
 
   #------------------- GAMEBOARD METHODS -------------------#
-  
-  def test
-    @player_hand << "[A\u2660][J\u2660]"
-    @dealer_hand << "[A\u2660][3\u2665]"
-  end
 
   def display_board
     system("clear")
@@ -433,7 +428,7 @@ class BlackJack
 
   def play
     until done?
-      test
+      first_deal
       left_print_str("$1/$500", 1)
       right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
