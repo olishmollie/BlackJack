@@ -39,13 +39,14 @@ class BlackJack
     @chips = 1000.00
     @wager = []
     @done = false
+    @insurance = false
   end
 
   #------------------- GAMEBOARD METHODS -------------------#
   
   def test
-    @player_hand << "[2\u2660][2\u2660]"
-    @dealer_hand << "[A\u2660][2\u2665]"
+    @player_hand << "[A\u2660][6\u2660]"
+    @dealer_hand << "[A\u2660][7\u2665]"
   end
 
   def display_board
@@ -147,6 +148,7 @@ class BlackJack
     @h = 0
     @wager = []
     @status = []
+    @insurance = false
     clear_board
   end
 
@@ -188,7 +190,7 @@ class BlackJack
     min = 1
     center_print_str("Please enter your wager.", 3)
     input = gets.strip
-    if input.to_i > min && input.to_i <= max && input.to_i <= @chips && input.scan(/\W+/) == []
+    if input.to_i >= min && input.to_i <= max && input.to_i <= @chips && input.scan(/\W+/) == []
       @wager << input.to_f
     elsif input.to_i > @chips
       delete_row(3)
@@ -215,13 +217,16 @@ class BlackJack
     center_print_str("Insurance?(Y/n)", 3)
     input
     if yes?
-      if score(@dealer_hand) == 21
+      @insurance = true
+      if score(@dealer_hand) == 21 && score(@player_hand[0]) != 21
         @wager[0] = 0
-      else
+      elsif score(@dealer_hand) != 21
         @chips -= @wager[0] / 2
         right_print_str("$#{'%2.f' % @chips}", 1)
         center_print_str("You lose $#{'%2.f' % (@wager[0] / 2)}!", 3)
         sleep(1)
+      else
+        show_hands(2)
       end
     elsif no?
       nil
@@ -412,7 +417,7 @@ class BlackJack
   
   def dealer_turn
     sleep(1)
-    if score(@dealer_hand) < 17
+    if score(@dealer_hand) < 17 || (score(@dealer_hand) == 17 && score(@dealer_hand.delete("A")) <= 7)
       center_print_str("Dealer hits.", 3)
       deal(@dealer_hand)
       show_hands(3)
@@ -428,12 +433,13 @@ class BlackJack
 
   def play
     until done?
-      first_deal
+      test
       left_print_str("$1/$500", 1)
       right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
-      right_print_str("BJ pays 6:5", 9)
+      right_print_str("BJ pays 7:5", 8)
+      right_print_str("Dealer hits soft 17", 9)
       wager
       show_hands(1)
       if @dealer_hand.scan(/\w+/)[0] == "A"
@@ -459,16 +465,23 @@ class BlackJack
     losses = 0
     if natural?(@player_hand[0]) || natural?(@dealer_hand)
         if score(@player_hand[0]) == 21 && score(@dealer_hand) == 21
-          center_print_str("You and the dealer both have BlackJack!!", 3)
-          show_hands(3)
+          if @insurance == true
+            center_print_str("You and the dealer both have BlackJack!!", 3)
+            winnings += @wager[0]
+            show_hands(3)
+          elsif @insurance == false
+            center_print_str("You and the dealer both have BlackJack!!", 3)
+            show_hands(3)
+          end
         elsif score(@dealer_hand) == 21
           center_print_str("Dealer has BlackJack!!", 3)
           losses += @wager[0]
           show_hands(3)
         elsif score(@player_hand[@h]) == 21
           center_print_str("You have BlackJack!!", 3)
-          @wager[0] += @wager[0] / 5
+          @wager[0] += 2 * @wager[0] / 5
           winnings += @wager[0]
+          show_hands(3)
         end
     elsif surrender?(@player_hand[0])
       losses += @wager[0] / 2
