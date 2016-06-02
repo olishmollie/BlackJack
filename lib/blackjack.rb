@@ -45,8 +45,8 @@ class BlackJack
   #------------------- GAMEBOARD METHODS -------------------#
   
   def test
-    @player_hand << "[A\u2660][6\u2660]"
-    @dealer_hand << "[A\u2660][7\u2665]"
+    @player_hand << "[A\u2660][J\u2660]"
+    @dealer_hand << "[A\u2660][J\u2665]"
   end
 
   def display_board
@@ -226,7 +226,7 @@ class BlackJack
         center_print_str("You lose $#{'%2.f' % (@wager[0] / 2)}!", 3)
         sleep(1)
       else
-        show_hands(2)
+        nil
       end
     elsif no?
       nil
