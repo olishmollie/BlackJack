@@ -432,6 +432,7 @@ class BlackJack
       right_print_str("$#{'%.2f' % @chips}", 1)
       center_print_str("Welcome to BlackJack!!!", 1)
       center_print_str("\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b\u207b", 2)
+      right_print_str("BJ pays 6:5", 9)
       wager
       show_hands(1)
       if @dealer_hand.scan(/\w+/)[0] == "A"
