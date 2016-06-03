@@ -1,2 +1,2 @@
 # BlackJack
-Another CLI game with Ruby.
+A card-counting trainer and BlackJack simulator.
