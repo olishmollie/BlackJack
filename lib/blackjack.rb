@@ -195,7 +195,6 @@ class BlackJack
   def wager
     max = 500
     min = 1
-    center_print_str("Please enter your wager.", 3)
     input = gets.strip
     if input.to_i >= min && input.to_i <= max && input.to_i <= @chips && input.scan(/\W+/) == []
       @wager << input.to_f
@@ -204,20 +203,24 @@ class BlackJack
       center_print_str("You don't have enough chips!", 3)
       sleep(1)
       delete_row(3)
+      display_board
       wager
     elsif input.to_i > max
       delete_row(3)
       center_print_str("Maximum bet is $500!", 3)
       sleep(1)
       delete_row(3)
+      display_board
       wager
     else
       delete_row(3)
       center_print_str("Invalid input", 3)
       sleep(1)
       delete_row(3)
+      display_board
       wager
     end
+    center_print_str("", 3)
   end
 
   def insurance
@@ -328,6 +331,11 @@ class BlackJack
 
   #------------------- GAME PLAY -------------------#
 
+  def test
+    @player_hand[0] = "[A\u2660][A\u2660]"
+    @dealer_hand = "[A\u2660][3\u2660]"
+  end
+  
   def first_deal
     @player_hand << @deck.shift
     @dealer_hand << @deck.shift
@@ -355,7 +363,7 @@ class BlackJack
     if @status[@h] == '21' || @status[@h] == 'bust' || @status[@h] == 'stay'
       nil
     elsif split_aces?(hand) && !can_split?(hand)
-      nil
+      center_print_str("", 3)
     else
       until over?(hand)
         valid_moves(hand)
@@ -422,7 +430,7 @@ class BlackJack
         end
       end
     end
-    sleep(1) if @h < @player_hand.length - 1
+    sleep(1) if @h < @player_hand.length - 1 && !split_aces?(hand)
   end
   
   def dealer_turn
@@ -451,6 +459,7 @@ class BlackJack
       right_print_str("BJ pays 7:5", 8)
       right_print_str("Dealer Hs17", 9)
       left_print_str("Wager?", 9)
+      display_board
       wager
       print_wager
       show_hands(1)
