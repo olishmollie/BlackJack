@@ -352,8 +352,8 @@ class BlackJack
   #------------------- GAME PLAY -------------------#
 
   def test
-    @player_hand[0] = "[A\u2660][A\u2660]"
-    @dealer_hand = "[A\u2660][3\u2660]"
+    @player_hand[0] = "[A\u2660][J\u2660]"
+    @dealer_hand = "[A\u2660][Q\u2660]"
   end
   
   def first_deal
