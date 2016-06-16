@@ -1,2 +1,2 @@
 # BlackJack
-A card-counting trainer and BlackJack simulator.
+A Blackjack simulator in Ruby.
