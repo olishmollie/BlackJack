@@ -372,8 +372,8 @@ class BlackJack
     split = [hand.scan(/\[\w+\X\]/)[0], hand.scan(/\[\w+\X\]/)[1]]
     @player_hand[@h] = split[0]
     @player_hand << split[1]
-    @player_hand.each do |hand|
-      deal(hand) if hand.scan(/\w+\X/).length == 1
+    @player_hand.each do |h|
+      deal(h) if h.scan(/\w+\X/).length == 1
     end
   end
 
@@ -439,8 +439,8 @@ class BlackJack
           split(hand)
           show_hands('split')
           print_wager
-          @player_hand.each do |hand|
-            player_turn(hand)
+          @player_hand.each do |h|
+            player_turn(h)
           end
           break
         elsif surrender?(hand) && @valid_moves.include?('x')
