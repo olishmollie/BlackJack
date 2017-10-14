@@ -1,6 +1,6 @@
 class BlackJack
+  
   def initialize
-
     board = [
       ["\u250F","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2501","\u2513"],
       ["\u2503"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","\u2503"],
@@ -178,11 +178,11 @@ class BlackJack
     if @wager.length > 1
       str = ""
       @wager.each_with_index do |wager, i|
-        str << "#{i + 1}.$#{wager.to_i} "
+        str << "#{i + 1}.$#{wager} "
       end
       left_print_str(str, 9)
     else
-      left_print_str("$#{@wager[0].to_i}", 9)
+      left_print_str("$#{@wager[0]}", 9)
     end
   end
 
@@ -215,8 +215,8 @@ class BlackJack
   def wager
     max = 500
     min = 1
-    input = gets.strip
-    if input.to_i >= min && input.to_i <= max && input.to_i <= @chips && input.scan(/\W+/) == []
+    input = gets.strip.chomp
+    if input.to_f >= min && input.to_f <= max && input.to_f <= @chips && (input.scan(/\W+/) == [] || input.scan(/\W+/) == ["."])
       @wager << input.to_f
     elsif input.to_i > @chips
       delete_row(3)
